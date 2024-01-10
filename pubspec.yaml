@@ -1,0 +1,47 @@
+name: vendeaze
+description: A new Flutter project.
+version: 1.0.0+1
+environment: 
+  sdk: '>=2.12.0 <3.0.0'
+dependencies: 
+  flutter: 
+    sdk: flutter
+  cached_network_image: ^3.2.1
+  flutter_svg: ^1.1.6
+  flutter_svg_provider: ^1.0.3
+  intl: ^0.18.0
+dev_dependencies: 
+  flutter_test: 
+    sdk: flutter
+flutter: 
+  uses-material-design: true
+  assets: 
+    - assets/
+    - assets/images/
+  fonts: 
+    - family: Londrina Solid
+      fonts: 
+        - asset: assets/fonts/LondrinaSolidBlack.ttf
+          weight: 900
+        - asset: assets/fonts/LondrinaSolidRegular.ttf
+          weight: 400
+    - family: Lalezar
+      fonts: 
+        - asset: assets/fonts/LalezarRegular.ttf
+          weight: 400
+    - family: Poppins
+      fonts: 
+        - asset: assets/fonts/PoppinsBlack.ttf
+          weight: 900
+        - asset: assets/fonts/PoppinsRegular.ttf
+          weight: 400
+    - family: Livvic
+      fonts: 
+        - asset: assets/fonts/LivvicBold.ttf
+          weight: 700
+        - asset: assets/fonts/LivvicRegular.ttf
+          weight: 400
+    - family: Krona One
+      fonts: 
+        - asset: assets/fonts/KronaOneRegular.ttf
+          weight: 400
