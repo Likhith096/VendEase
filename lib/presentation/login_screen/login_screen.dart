@@ -8,97 +8,107 @@ import 'package:vendeaze/widgets/custom_text_form_field.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  FocusNode emailFocusNode = FocusNode();
-  FocusNode passwordFocusNode = FocusNode();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
-        resizeToAvoidBottomInset: false,
-        body: Form(
-          key: _formKey,
-          child: SizedBox(
-            height: SizeUtils.height,
-            width: double.maxFinite,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 19.h, vertical: 104.v),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(ImageConstant.imgGroup73),
-                        fit: BoxFit.cover,
+@override
+Widget build(BuildContext context) {
+  return SafeArea(
+    child: GestureDetector(
+        onTap: () {
+          // Close keyboard when tapping outside of a text field
+          FocusScopeNode focusStatus = FocusScope.of(context);
+          if(!focusStatus.hasPrimaryFocus){
+            focusStatus.unfocus();
+          }
+        },
+    child: Scaffold(
+      backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
+        body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Form(
+            child: SizedBox(
+              height: SizeUtils.height,
+              width: double.maxFinite,
+              key: _formKey,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 19.h, vertical: 104.v),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(ImageConstant.imgGroup73),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.h),
+                            child: Text("Email", style: CustomTextStyles.displayMedium50),
+                          ),
+                          SizedBox(height: 9.v),
+                          Padding(
+                            padding: EdgeInsets.only(right: 12.h),
+                            child: CustomTextFormField(
+                              controller: emailController,
+                              hintText: "enter Email",
+                              textInputType: TextInputType.emailAddress,
+                              focusNode: emailFocusNode,
+                            ),
+                          ),
+                          SizedBox(height: 58.v),
+                          _buildPasswordStack(context),
+                          SizedBox(height: 54.v),
+                          CustomElevatedButton(
+                            width: 216.h,
+                            text: "LOGIN".toUpperCase(),
+                            margin: EdgeInsets.only(left: 62.h),
+                            buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnErrorBold,
+                            onPressed: () {
+                              onTapLOGIN(context);
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Spacer(),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.h),
-                          child: Text("Email", style: CustomTextStyles.displayMedium50),
-                        ),
-                        SizedBox(height: 9.v),
-                        Padding(
-                          padding: EdgeInsets.only(right: 12.h),
-                          child: CustomTextFormField(
-                            controller: emailController,
-                            hintText: "enter Email",
-                            textInputType: TextInputType.emailAddress,
-                            focusNode: emailFocusNode,
-                            // onEditingComplete: () {
-                            //   FocusScope.of(context).requestFocus(passwordFocusNode);
-                            // },
-                          ),
-                        ),
-                        SizedBox(height: 58.v),
-                        _buildPasswordStack(context),
-                        SizedBox(height: 54.v),
-                        CustomElevatedButton(
-                          width: 216.h,
-                          text: "LOGIN".toUpperCase(),
-                          margin: EdgeInsets.only(left: 62.h),
-                          buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnErrorBold,
-                          onPressed: () {
-                            onTapLOGIN(context);
-                          },
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgEllipse3174x390,
-                  height: 174.v,
-                  width: 390.h,
-                  alignment: Alignment.topCenter,
-                ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgVendeaselogoRemovebgPreview164x255,
-                  height: 164.v,
-                  width: 255.h,
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 26.v),
-                ),
-              ],
+                  CustomImageView(
+                    imagePath: ImageConstant.imgEllipse3174x390,
+                    height: 174.v,
+                    width: 390.h,
+                    alignment: Alignment.topCenter,
+                  ),
+                  CustomImageView(
+                    imagePath: ImageConstant.imgVendeaselogoRemovebgPreview164x255,
+                    height: 164.v,
+                    width: 255.h,
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 26.v),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   Widget _buildPasswordStack(BuildContext context) {
     return Container(
@@ -117,9 +127,6 @@ class LoginScreen extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             obscureText: true,
             focusNode: passwordFocusNode,
-            // onEditingComplete: () {
-            //   FocusScope.of(context).requestFocus(FocusNode());
-            // },
           ),
           Align(
             alignment: Alignment.topLeft,
