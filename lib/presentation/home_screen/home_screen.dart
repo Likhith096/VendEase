@@ -11,33 +11,34 @@ class HomeScreen extends StatelessWidget {
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              _buildLocationRow(context),
-              Spacer(),
-              Text(
-                "CATEGORIES",
-                style: CustomTextStyles.headlineLargePrimaryContainer,
-              ),
-              SizedBox(height: 14.v),
-              _buildCategoriesRow(context),
-              SizedBox(height: 55.v),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 11.h),
-          child: _buildBottomBar(context),
+@override
+Widget build(BuildContext context) {
+  return SafeArea(
+    child: Scaffold(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          children: [
+            _buildLocationRow(context),
+            Text(
+              "CATEGORIES",
+              style: CustomTextStyles.headlineLargePrimaryContainer,
+            ),
+            SizedBox(height: 14.v),
+            _buildCategoriesRow(context),
+            SizedBox(height: 55.v),
+          ],
         ),
       ),
-    );
-  }
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 11.h),
+        child: _buildBottomBar(context),
+      ),
+    ),
+  );
+}
+
+
 
   /// Section Widget
   Widget _buildLocationRow(BuildContext context) {
@@ -68,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Text(
                     "Location",
-                    style: Theme.of(context).textTheme.headline6, // Adjusted this line
+                    style: Theme.of(context).textTheme.headlineSmall, // Adjusted this line
                   ),
                 ],
               ),
@@ -86,36 +87,31 @@ class HomeScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildCategoriesRow(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 31.h,
-        right: 22.h,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgRectangle11,
-            height: 256.v,
-            width: 250.h,
-            radius: BorderRadius.circular(
-              24.h,
-            ),
-          ),
-          CustomImageView(
-            imagePath: ImageConstant.imgRectangle12,
-            height: 256.v,
-            width: 30.h,
-            radius: BorderRadius.circular(
-              15.h,
-            ),
-            margin: EdgeInsets.only(left: 55.h),
-          ),
-        ],
-      ),
+Widget _buildCategoriesRow(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+    padding: EdgeInsets.symmetric(horizontal: 31.h),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomImageView(
+          imagePath: ImageConstant.imgRectangle11,
+          height: 256.v,
+          width: 250.h,
+          radius: BorderRadius.circular(24.h),
+        ),
+        CustomImageView(
+          imagePath: ImageConstant.imgRectangle12,
+          height: 256.v,
+          width: 30.h,
+          radius: BorderRadius.circular(15.h),
+          margin: EdgeInsets.only(left: 55.h),
+        ),
+      ],
+    ),
     );
-  }
+}
+
 
   /// Section Widget
   Widget _buildBottomBar(BuildContext context) {
@@ -131,11 +127,11 @@ class HomeScreen extends StatelessWidget {
   String getCurrentRoute(BottomBarEnum type) {
     switch (type) {
       case BottomBarEnum.Heroiconssolidhome:
-        return AppRoutes.cartsPage;
+        return AppRoutes.cartsPageContainerScreen;
       case BottomBarEnum.Search:
         return "/";
       case BottomBarEnum.User:
-        return "/";
+        return AppRoutes.profileScreen;
       default:
         return "/";
     }
