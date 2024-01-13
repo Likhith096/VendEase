@@ -13,85 +13,105 @@ class SignUpScreen extends StatelessWidget {
 
   TextEditingController passwordFieldController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor:
-                theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
-            resizeToAvoidBottomInset: false,
-            body: Form(
-                key: _formKey,
-                child: SizedBox(
-                    height: SizeUtils.height,
-                    width: double.maxFinite,
-                    child: Stack(alignment: Alignment.topCenter, children: [
-                      Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                              height: 835.v,
-                              width: double.maxFinite,
-                              child: Stack(
-                                  alignment: Alignment.bottomLeft,
-                                  children: [
-                                    CustomImageView(
-                                        imagePath: ImageConstant.imgApp21,
-                                        height: 835.v,
-                                        width: 390.h,
-                                        alignment: Alignment.center),
-                                    Align(
-                                        alignment: Alignment.bottomLeft,
-                                        child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 18.h, bottom: 63.v),
-                                            child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("Name",
-                                                      style: theme.textTheme
-                                                          .displayMedium),
-                                                  _buildNameField(context),
-                                                  Text("Email",
-                                                      style: theme.textTheme
-                                                          .displayMedium),
-                                                  _buildEmailField(context),
-                                                  SizedBox(height: 2.v),
-                                                  Text("Password",
-                                                      style: theme.textTheme
-                                                          .displayMedium),
-                                                  _buildPasswordField(context),
-                                                  SizedBox(height: 43.v),
-                                                  _buildSignUpButton(context),
-                                                  SizedBox(height: 26.v),
-                                                  Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text("or",
-                                                          style: theme.textTheme
-                                                              .headlineSmall)),
-                                                  SizedBox(height: 14.v),
-                                                  _buildSignUpWithGoogleButton(
-                                                      context)
-                                                ])))
-                                  ]))),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgEllipse31,
-                          height: 174.v,
-                          width: 390.h,
-                          alignment: Alignment.topCenter),
-                      CustomImageView(
-                          imagePath: ImageConstant
-                              .imgVendeaselogoRemovebgPreview164x255,
-                          height: 164.v,
-                          width: 255.h,
-                          alignment: Alignment.topCenter,
-                          margin: EdgeInsets.only(top: 26.v))
-                    ])))));
-  }
+@override
+Widget build(BuildContext context) {
+  return SafeArea(
+    child: GestureDetector(
+      onTap: () {
+        // Close keyboard when tapping outside of a text field
+        FocusScopeNode focusStatus = FocusScope.of(context);
+        if (!focusStatus.hasPrimaryFocus) {
+          focusStatus.unfocus();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          // Set keyboardDismissBehavior to onDrag
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Form(
+            // key: _formKey,
+            child: SizedBox(
+              height: SizeUtils.height,
+              width: double.maxFinite,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      height: 835.v,
+                      width: double.maxFinite,
+                      child: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          CustomImageView(
+                            imagePath: ImageConstant.imgApp21,
+                            height: 835.v,
+                            width: 390.h,
+                            alignment: Alignment.center,
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 18.h, bottom: 63.v),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Name",
+                                      style: theme.textTheme.displayMedium),
+                                  _buildNameField(context),
+                                  Text("Email",
+                                      style: theme.textTheme.displayMedium),
+                                  _buildEmailField(context),
+                                  SizedBox(height: 2.v),
+                                  Text("Password",
+                                      style: theme.textTheme.displayMedium),
+                                  _buildPasswordField(context),
+                                  SizedBox(height: 43.v),
+                                  _buildSignUpButton(context),
+                                  SizedBox(height: 26.v),
+                                  Align(
+                                      alignment: Alignment.center,
+                                      child: Text("or",
+                                          style: theme.textTheme.headlineSmall)),
+                                  SizedBox(height: 14.v),
+                                  _buildSignUpWithGoogleButton(context),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  CustomImageView(
+                    imagePath: ImageConstant.imgEllipse31,
+                    height: 174.v,
+                    width: 390.h,
+                    alignment: Alignment.topCenter,
+                  ),
+                  CustomImageView(
+                    imagePath: ImageConstant.imgVendeaselogoRemovebgPreview164x255,
+                    height: 164.v,
+                    width: 255.h,
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 26.v),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
   /// Section Widget
   Widget _buildNameField(BuildContext context) {
