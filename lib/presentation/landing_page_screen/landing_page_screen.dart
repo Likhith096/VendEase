@@ -12,14 +12,14 @@ class LandingPageScreen extends StatelessWidget {
             backgroundColor: theme.colorScheme.onPrimaryContainer,
               body: SingleChildScrollView(
               child: SizedBox(
-                height: 300.0,
-                width: double.maxFinite,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
                 child: Stack(alignment: Alignment.topRight, children: [
                   Align(
                       alignment: Alignment.center,
                       child: Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 12.h, vertical: 87.v),
+                              horizontal: 12.h, vertical: 47.v),
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage(ImageConstant.imgGroup13),
