@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "472003495631",
+    "project_id": "vendease-2e07e",
+    "storage_bucket": "vendease-2e07e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472003495631:android:bd3d691229d776b67059ba",
+        "android_client_info": {
+          "package_name": "com.vendeaze.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8mdQS94j8VukYm-35cIFNZFF6vyJXts4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

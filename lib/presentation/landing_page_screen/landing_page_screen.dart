@@ -9,7 +9,7 @@ class LandingPageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            backgroundColor: theme.colorScheme.onPrimaryContainer,
+              backgroundColor: theme.colorScheme.onPrimaryContainer,
               body: SingleChildScrollView(
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,

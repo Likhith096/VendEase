@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 @override
 Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ Widget build(BuildContext context) {
             child: SizedBox(
               height: SizeUtils.height,
               width: double.maxFinite,
-              key: _formKey,
+              //key: _formKey,
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [

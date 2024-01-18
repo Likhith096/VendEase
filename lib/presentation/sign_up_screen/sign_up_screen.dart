@@ -35,8 +35,8 @@ Widget build(BuildContext context) {
           child: Form(
             // key: _formKey,
             child: SizedBox(
-              height: SizeUtils.height,
-              width: double.maxFinite,
+             height: MediaQuery.of(context).size.height,
+             width: MediaQuery.of(context).size.width,
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [
@@ -57,29 +57,25 @@ Widget build(BuildContext context) {
                           Align(
                             alignment: Alignment.bottomLeft,
                             child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 18.h, bottom: 63.v),
+                              padding: EdgeInsets.only(left: 1.h, bottom: 63.v),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Name",
-                                      style: theme.textTheme.displayMedium),
+                                  Text("Name", style: theme.textTheme.displayMedium),
                                   _buildNameField(context),
-                                  Text("Email",
-                                      style: theme.textTheme.displayMedium),
+                                  Text("Email", style: theme.textTheme.displayMedium),
                                   _buildEmailField(context),
                                   SizedBox(height: 2.v),
-                                  Text("Password",
-                                      style: theme.textTheme.displayMedium),
+                                  Text("Password", style: theme.textTheme.displayMedium),
                                   _buildPasswordField(context),
                                   SizedBox(height: 43.v),
                                   _buildSignUpButton(context),
                                   SizedBox(height: 26.v),
                                   Align(
-                                      alignment: Alignment.center,
-                                      child: Text("or",
-                                          style: theme.textTheme.headlineSmall)),
+                                    alignment: Alignment.center,
+                                    child: Text("or", style: theme.textTheme.headlineSmall),
+                                  ),
                                   SizedBox(height: 14.v),
                                   _buildSignUpWithGoogleButton(context),
                                 ],
@@ -116,14 +112,14 @@ Widget build(BuildContext context) {
   /// Section Widget
   Widget _buildNameField(BuildContext context) {
     return CustomTextFormField(
-        controller: nameFieldController, hintText: "enter Name");
+        controller: nameFieldController, hintText: "Enter Name");
   }
 
   /// Section Widget
   Widget _buildEmailField(BuildContext context) {
     return CustomTextFormField(
         controller: emailFieldController,
-        hintText: "enter Email",
+        hintText: "Enter Email",
         textInputType: TextInputType.emailAddress);
   }
 
@@ -131,7 +127,7 @@ Widget build(BuildContext context) {
   Widget _buildPasswordField(BuildContext context) {
     return CustomTextFormField(
         controller: passwordFieldController,
-        hintText: "enter Password",
+        hintText: "Enter Password",
         textInputAction: TextInputAction.done,
         textInputType: TextInputType.visiblePassword,
         obscureText: true);
@@ -163,6 +159,9 @@ Widget build(BuildContext context) {
                 width: 37.h)),
         buttonStyle: CustomButtonStyles.fillPrimary,
         buttonTextStyle: theme.textTheme.titleMedium!,
+        onPressed: () {
+          onTapSignUpButton(context);
+        },
         alignment: Alignment.center);
   }
 
