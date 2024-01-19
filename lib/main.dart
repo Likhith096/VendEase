@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vendeaze/routes/app_routes.dart';
+import 'firebase_options.dart';
+import 'routes/app_routes.dart';
 
 class Sizer extends StatelessWidget {
   final Widget Function(BuildContext, Orientation, DeviceType) builder;
@@ -46,12 +48,14 @@ class ChangeTheme {
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+);
   runApp(MyApp());
 }
 
