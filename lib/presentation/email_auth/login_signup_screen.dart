@@ -1,3 +1,8 @@
+// ignore_for_file: prefer_single_quotes
+
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 
@@ -13,6 +18,34 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  Future<void> createAccount() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String name = nameController.text.trim();
+    if(name == "")
+    {
+      log("Please fill The Name");
+    }
+    else if(email == "")
+    {
+      log("Please fill The Email ID");
+    }
+    else if(password == "")
+    {
+      log("Please fill The Password");
+    }
+    else if(email == "")
+    {
+      log("Please fill The Email ID");
+    }
+    else
+    {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email,password: password);
+      log("User Created");
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,39 +78,161 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                         child: Text("Welcome!",
                                             style: CustomTextStyles
                                                 .displayMediumBlack))),
-                                SizedBox(height: 22.v),
-                                SizedBox(
-                                    height: 75.v,
-                                    width: 306.h,
-                                    child: Stack(
-                                        alignment: Alignment.centerLeft,
-                                        children: [
-                                          Align(
-                                              alignment: Alignment.center,
-                                              child: GestureDetector(
-                                                  onTap: () {
-                                                    onTapView(context);
-                                                  },
-                                                  child: Container(
-                                                      height: 64.v,
-                                                      width: 306.h,
-                                                      decoration: BoxDecoration(
-                                                          color: appTheme
-                                                              .pink100,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      32.h))))),
-                                          Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 73.h),
-                                                  child: Text(
-                                                      "Login".toUpperCase(),
-                                                      style: CustomTextStyles
-                                                          .displayMediumOnError)))
-                                        ])),
+                                  SizedBox(height: 22.v),
+                    // Name Input
+                    SizedBox(
+                      height: 75.v,
+                      width: 306.h,
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: GestureDetector(
+                              onTap: () {
+                                // Do something if needed
+                              },
+                              child: Container(
+                                height: 64.v,
+                                width: 306.h,
+                                decoration: BoxDecoration(
+                                  color: appTheme.pink100,
+                                  borderRadius: BorderRadius.circular(32.h),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 73.h),
+                              child: TextField(
+                                controller: nameController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Name',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 22.v),
+                    // Email Input
+                    SizedBox(
+                      height: 75.v,
+                      width: 306.h,
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: GestureDetector(
+                              onTap: () {
+                                // Do something if needed
+                              },
+                              child: Container(
+                                height: 64.v,
+                                width: 306.h,
+                                decoration: BoxDecoration(
+                                  color: appTheme.pink100,
+                                  borderRadius: BorderRadius.circular(32.h),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 73.h),
+                              child: TextField(
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Email',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 22.v),
+                    // Password Input
+                    SizedBox(
+                      height: 75.v,
+                      width: 306.h,
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: GestureDetector(
+                              onTap: () {
+                                // Do something if needed
+                              },
+                              child: Container(
+                                height: 64.v,
+                                width: 306.h,
+                                decoration: BoxDecoration(
+                                  color: appTheme.pink100,
+                                  borderRadius: BorderRadius.circular(32.h),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 73.h),
+                              child: TextField(
+                                controller: passwordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Password',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 22.v),
+                    // Sign Up Button
+                    SizedBox(
+                      height: 75.v,
+                      width: 306.h,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: GestureDetector(
+                              onTap: () {
+                                createAccount();
+                              },
+                              child: Container(
+                                height: 64.v,
+                                width: 306.h,
+                                decoration: BoxDecoration(
+                                  color: appTheme.pink100,
+                                  borderRadius: BorderRadius.circular(32.h),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "sign up".toUpperCase(),
+                              style: CustomTextStyles.displayMediumOnError,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                                 SizedBox(height: 81.v),
                                 SizedBox(
                                     height: 75.v,
