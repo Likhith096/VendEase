@@ -3,32 +3,28 @@ import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/widgets/custom_elevated_button.dart';
 import 'package:vendeaze/widgets/custom_text_form_field.dart';
 
-// ignore_for_file: must_be_immutable
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
 
-  TextEditingController nameFieldController = TextEditingController();
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
 
-  TextEditingController emailFieldController = TextEditingController();
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameFieldController = TextEditingController();
+  final TextEditingController emailFieldController = TextEditingController();
+  final TextEditingController passwordFieldController = TextEditingController();
 
-  TextEditingController passwordFieldController = TextEditingController();
+  // Uncomment and use the form key for form operations
+  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  //GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 @override
 Widget build(BuildContext context) {
   return SafeArea(
     child: GestureDetector(
-      onTap: () {
-        // Close keyboard when tapping outside of a text field
-        FocusScopeNode focusStatus = FocusScope.of(context);
-        if (!focusStatus.hasPrimaryFocus) {
-          focusStatus.unfocus();
-        }
-      },
       child: Scaffold(
         backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
-        resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           // Set keyboardDismissBehavior to onDrag
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,

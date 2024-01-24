@@ -1,13 +1,17 @@
+<<<<<<< HEAD
 // ignore_for_file: prefer_single_quotes
 
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+=======
+>>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
 import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/widgets/custom_elevated_button.dart';
 import 'package:vendeaze/widgets/custom_text_form_field.dart';
 
+<<<<<<< HEAD
 // ignore_for_file: must_be_immutable
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -40,11 +44,29 @@ class SignUpScreen extends StatelessWidget {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email,password: password);
       log("User Created");
     }
+=======
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameFieldController = TextEditingController();
+  final TextEditingController emailFieldController = TextEditingController();
+  final TextEditingController passwordFieldController = TextEditingController();
+
+  // Uncomment and use the form key for form operations
+  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+>>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
 
 @override
 Widget build(BuildContext context) {
   return SafeArea(
     child: GestureDetector(
+<<<<<<< HEAD
       onTap: () {
         // Close keyboard when tapping outside of a text field
         FocusScopeNode focusStatus = FocusScope.of(context);
@@ -55,6 +77,10 @@ Widget build(BuildContext context) {
       child: Scaffold(
         backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
         resizeToAvoidBottomInset: false,
+=======
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
+>>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
         body: SingleChildScrollView(
           // Set keyboardDismissBehavior to onDrag
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -166,7 +192,11 @@ Widget build(BuildContext context) {
         text: "Sign Up".toUpperCase(),
         buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnError,
         onPressed: () {
+<<<<<<< HEAD
           createAccount();
+=======
+          onTapSignUpButton(context);
+>>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
         },
         alignment: Alignment.center);
   }
