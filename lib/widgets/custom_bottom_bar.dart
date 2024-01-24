@@ -79,21 +79,37 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               ),
               child: CustomImageView(
                 imagePath: bottomMenuList[index].activeIcon,
-                height: 54.adaptSize,
-                width: 54.adaptSize,
+                height: 36.adaptSize,
+                width: 36.adaptSize,
                 color: theme.colorScheme.onError.withOpacity(1),
               ),
             ),
             label: '',
           );
         }),
+        //currentIndex:selectedIndex,
         onTap: (index) {
+          setState(() {
           selectedIndex = index;
-          widget.onChanged?.call(bottomMenuList[index].type);
-          setState(() {});
+        });
+        Navigator.pushNamed(context, getCurrentRoute(bottomMenuList[index].type));  
         },
       ),
     );
+  }
+}
+
+/// Handling route based on bottom click actions
+String getCurrentRoute(BottomBarEnum type) {
+  switch (type) {
+    case BottomBarEnum.Heroiconssolidhome:
+      return AppRoutes.homeScreen; // Corrected route for Home
+    case BottomBarEnum.Search:
+      return AppRoutes.searchPageScreen;
+    case BottomBarEnum.User:
+      return AppRoutes.profileScreen;
+    default:
+      return "/";
   }
 }
 

@@ -39,13 +39,8 @@ class LandingPageScreen extends StatelessWidget {
                                         alignment: Alignment.bottomCenter,
                                         children: [
                                           Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Text("Hey!",
-                                                  style: CustomTextStyles
-                                                      .londrinaSolidPrimary)),
-                                          Align(
                                               alignment: Alignment.bottomCenter,
-                                              child: Text("Foodie",
+                                              child: Text("Hey Foodie",
                                                   style: CustomTextStyles
                                                       .londrinaSolidPrimary))
                                         ]))),

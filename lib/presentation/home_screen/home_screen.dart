@@ -4,49 +4,41 @@ import 'package:vendeaze/presentation/carts_page/carts_page.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key})
-      : super(
-          key: key,
-        );
+  HomeScreen({Key? key}) : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
-@override
-Widget build(BuildContext context) {
-  return SafeArea(
-    child: Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          children: [
-            _buildLocationRow(context),
-            Text(
-              "CATEGORIES",
-              style: CustomTextStyles.headlineLargePrimaryContainer,
-            ),
-            SizedBox(height: 14.v),
-            _buildCategoriesRow(context),
-            SizedBox(height: 55.v),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildLocationRow(context),
+              Text(
+                "CATEGORIES",
+                style: CustomTextStyles.headlineLargePrimaryContainer,
+              ),
+              SizedBox(height: 14.v),
+              _buildCategoriesRow(context),
+              SizedBox(height: 55.v),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.h),
+          child: _buildBottomBar(context),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 11.h),
-        child: _buildBottomBar(context),
-      ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   /// Section Widget
   Widget _buildLocationRow(BuildContext context) {
     return SizedBox(
       height: 100.v,
       width: 389.h,
-      // height: MediaQuery.of(context).size.height*0.3,
-      // width: MediaQuery.of(context).size.width,
       child: Stack(
         alignment: Alignment.centerRight,
         children: [
@@ -90,56 +82,48 @@ Widget build(BuildContext context) {
 
   /// Section Widget
 Widget _buildCategoriesRow(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-    padding: EdgeInsets.symmetric(horizontal: 31.h),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomImageView(
-          imagePath: ImageConstant.imgRectangle11,
-          height: 256.v,
-          width: 250.h,
-          radius: BorderRadius.circular(24.h),
-        ),
-        CustomImageView(
-          imagePath: ImageConstant.imgRectangle12,
-          height: 256.v,
-          width: 30.h,
-          radius: BorderRadius.circular(15.h),
-          margin: EdgeInsets.only(left: 55.h),
-        ),
-      ],
-    ),
+    // Assuming you have a list of category image paths
+    final List<String> categoryImages = [
+      ImageConstant.imgRectangle11,
+      ImageConstant.imgRectangle12,
+      ImageConstant.imgRectangle65,
+
+      // Add more categories as needed
+    ];
+
+    return Container(
+      height: 256.v, // Set a fixed height for the container
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categoryImages.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: index == 0 ? 31.h : 55.h,
+              right: index == categoryImages.length - 1 ? 31.h : 0,
+            ),
+            child: CustomImageView(
+              imagePath: categoryImages[index],
+              height: 256.v,
+              width: 250.h,
+              radius: BorderRadius.circular(24.h),
+            ),
+          );
+        },
+      ),
     );
-}
+  }
 
 
 /// Section Widget
 Widget _buildBottomBar(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.pushNamed(context, getCurrentRoute(BottomBarEnum.Heroiconssolidhome));
+  return CustomBottomBar(
+    onChanged: (BottomBarEnum type) {
+      // This callback can be used to update the state of HomeScreen if needed.
     },
-    child: CustomBottomBar(
-      onChanged: getCurrentRoute,
-    ),
   );
 }
 
-/// Handling route based on bottom click actions
-String getCurrentRoute(BottomBarEnum type) {
-  switch (type) {
-    case BottomBarEnum.Heroiconssolidhome:
-      return AppRoutes.cartsPageContainerScreen;
-    case BottomBarEnum.Search:
-      return AppRoutes.searchPageScreen;
-    case BottomBarEnum.User:
-      return AppRoutes.profileScreen;
-    default:
-      return "/";
-  }
-}
 
 /// Handling page based on route
 Widget getCurrentPage(String currentRoute) {
@@ -150,5 +134,4 @@ Widget getCurrentPage(String currentRoute) {
       return DefaultWidget();
   }
 }
-
 }
