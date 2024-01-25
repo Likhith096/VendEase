@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vendeaze/presentation/landing_page_screen/landing_page_screen.dart';
 import 'package:vendeaze/presentation/login_signup_screen/login_signup_screen.dart';
 import 'package:vendeaze/presentation/login_screen/login_screen.dart';
-import 'package:vendeaze/presentation/sign_up_screen/sign_up_screen.dart';
+//import 'package:vendeaze/presentation/sign_up_screen/sign_up_screen.dart';
 import 'package:vendeaze/presentation/frame_eleven_screen/frame_eleven_screen.dart';
 import 'package:vendeaze/presentation/products_page_screen/products_page_screen.dart';
 import 'package:vendeaze/presentation/search_page_screen/search_page_screen.dart';
@@ -43,9 +43,13 @@ class AppRoutes {
     landingPageScreen: (context) => LandingPageScreen(),
     loginSignupScreen: (context) => LoginSignupScreen(),
     loginScreen: (context) => LoginScreen(),
-    signUpScreen: (context) => SignUpScreen(),
+    //signUpScreen: (context) => SignUpScreen(),
     frameElevenScreen: (context) => FrameElevenScreen(),
-    productsPageScreen: (context) => ProductsPageScreen(),
+    AppRoutes.productsPageScreen: (context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>? ?? {};
+    final categoryName = args['categoryName'] as String? ?? 'Default Category'; // Provide a default or handle null as needed
+    return ProductsPageScreen(categoryName: categoryName);
+  },
     searchPageScreen: (context) => SearchPageScreen(),
     cartsPageContainerScreen: (context) => CartsPageContainerScreen(),
     homeScreen: (context) => HomeScreen(),

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/presentation/carts_page/carts_page.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
-
+import '../products_page_screen/products_page_screen.dart';
+import '../products_page_screen/widgets/productcard_item_widget.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -16,13 +17,15 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               _buildLocationRow(context),
+              SizedBox(height: 14.v),
+              _buildCategoriesRow(context),
               Text(
                 "CATEGORIES",
                 style: CustomTextStyles.headlineLargePrimaryContainer,
               ),
-              SizedBox(height: 14.v),
-              _buildCategoriesRow(context),
               SizedBox(height: 55.v),
+              // _buildProductCard(context),
+              // SizedBox(height: 30.v), // Replace Spacer with a SizedBox
             ],
           ),
         ),
@@ -33,6 +36,38 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+// Widget _buildProductCard(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.only(
+//         left: 24.h,
+//         right: 17.h,
+//       ),
+//       child: GridView.builder(
+//         shrinkWrap: true,
+//         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//           mainAxisExtent: 216.v,
+//           crossAxisCount: 2,
+//           mainAxisSpacing: 29.h,
+//           crossAxisSpacing: 29.h,
+//         ),
+//         physics: NeverScrollableScrollPhysics(),
+//         itemCount: 4,
+//         itemBuilder: (context, index) {
+//           return ProductcardItemWidget(
+//             onAddPressed: () {
+//        Navigator.of(context).push(
+//               MaterialPageRoute(
+//                 builder: (context) => ProductsPageScreen(
+//                   categoryName: 'Your Category Name', // Provide the category name if needed
+//                 ),
+//                 ));},
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+
 
   /// Section Widget
   Widget _buildLocationRow(BuildContext context) {
@@ -82,37 +117,49 @@ class HomeScreen extends StatelessWidget {
 
   /// Section Widget
 Widget _buildCategoriesRow(BuildContext context) {
-    // Assuming you have a list of category image paths
-    final List<String> categoryImages = [
-      ImageConstant.imgRectangle11,
-      ImageConstant.imgRectangle12,
-      ImageConstant.imgRectangle65,
+  // Updated list with category name and image path
+  final List<Map<String, String>> categories = [
+    {"name": "Category1", "image": ImageConstant.imgCat1},
+    {"name": "Category2", "image": ImageConstant.imgCat2},
+    {"name": "Category3", "image": ImageConstant.imgCat3},
+    // ... other categories
+  ];
 
-      // Add more categories as needed
-    ];
-
-    return Container(
-      height: 256.v, // Set a fixed height for the container
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categoryImages.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              left: index == 0 ? 31.h : 55.h,
-              right: index == categoryImages.length - 1 ? 31.h : 0,
-            ),
+  return Container(
+    height: 324.v, // Set a fixed height for the container
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: categories.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: index == 0 ? 31.h : 55.h,
+            right: index == categories.length - 1 ? 31.h : 0,
+          ),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductsPageScreen(
+                    // Pass the selected category name to the ProductsPageScreen
+                    categoryName: categories[index]["name"]!,
+                  ),
+                ),
+              );
+            },
             child: CustomImageView(
-              imagePath: categoryImages[index],
-              height: 256.v,
-              width: 250.h,
+              imagePath: categories[index]["image"]!,
+              height: 324.v,
+              width: 280.h,
               radius: BorderRadius.circular(24.h),
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        );
+      },
+    ),
+  );
+}
 
 
 /// Section Widget
@@ -131,7 +178,7 @@ Widget getCurrentPage(String currentRoute) {
     case AppRoutes.cartsPage:
       return CartsPage();
     default:
-      return DefaultWidget();
+      return HomeScreen();
   }
 }
 }

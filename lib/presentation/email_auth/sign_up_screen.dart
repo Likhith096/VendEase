@@ -1,50 +1,11 @@
-<<<<<<< HEAD
-// ignore_for_file: prefer_single_quotes
-
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
-=======
->>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
 import 'package:flutter/material.dart';
-import 'package:vendeaze/core/app_export.dart';
-import 'package:vendeaze/widgets/custom_elevated_button.dart';
-import 'package:vendeaze/widgets/custom_text_form_field.dart';
+import 'package:vendeaze/core/app_export.dart'; // Ensure this import is correct
+import 'package:vendeaze/widgets/custom_elevated_button.dart'; // Ensure this import is correct
+import 'package:vendeaze/widgets/custom_text_form_field.dart'; // Ensure this import is correct
 
-<<<<<<< HEAD
 // ignore_for_file: must_be_immutable
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key}) : super(key: key);
-
-  TextEditingController nameFieldController = TextEditingController();
-
-  TextEditingController emailFieldController = TextEditingController();
-
-  TextEditingController passwordFieldController = TextEditingController();
-
-  //GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Future<void> createAccount() async {
-    String email = emailFieldController.text.trim();
-    String password = passwordFieldController.text.trim();
-    String name = nameFieldController.text.trim();
-    if(name == "")
-    {
-      log("Please fill The Name");
-    }
-    else if(email == "")
-    {
-      log("Please fill The Email ID");
-    }
-    else if(password == "")
-    {
-      log("Please fill The Password");
-    }
-    else
-    {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email,password: password);
-      log("User Created");
-    }
-=======
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
 
@@ -57,30 +18,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailFieldController = TextEditingController();
   final TextEditingController passwordFieldController = TextEditingController();
 
-  // Uncomment and use the form key for form operations
-  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    // Dispose controllers when the screen is disposed
+    nameFieldController.dispose();
+    emailFieldController.dispose();
+    passwordFieldController.dispose();
+    super.dispose();
+  }
 
->>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
+Future<void> createAccount() async {
+  String email = emailFieldController.text.trim();
+  String password = passwordFieldController.text.trim();
+  String name = nameFieldController.text.trim();
 
+  if (name.isEmpty) {
+    log("Please fill in the name");
+  } else if (email.isEmpty) {
+    log("Please fill in the email ID");
+  } else if (password.isEmpty) {
+    log("Please fill in the password");
+  } else {
+    try {
+      // Removed the unused variable 'userCredential'
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      log("User Created");
+
+      // If you want to use the created user information, you can do it here.
+      // For example:
+      // User? user = FirebaseAuth.instance.currentUser;
+      // Update the user profile or navigate to another screen
+
+    } on FirebaseAuthException catch (e) {
+      log("Failed to create account: ${e.message}");
+    }
+  }
+}
 @override
 Widget build(BuildContext context) {
   return SafeArea(
     child: GestureDetector(
-<<<<<<< HEAD
-      onTap: () {
-        // Close keyboard when tapping outside of a text field
-        FocusScopeNode focusStatus = FocusScope.of(context);
-        if (!focusStatus.hasPrimaryFocus) {
-          focusStatus.unfocus();
-        }
-      },
       child: Scaffold(
         backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
-        resizeToAvoidBottomInset: false,
-=======
-      child: Scaffold(
-        backgroundColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.5),
->>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
         body: SingleChildScrollView(
           // Set keyboardDismissBehavior to onDrag
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -192,11 +171,7 @@ Widget build(BuildContext context) {
         text: "Sign Up".toUpperCase(),
         buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnError,
         onPressed: () {
-<<<<<<< HEAD
           createAccount();
-=======
-          onTapSignUpButton(context);
->>>>>>> 84bb90908d8a744ba77c45f4cac0021a1d3efcd2
         },
         alignment: Alignment.center);
   }
