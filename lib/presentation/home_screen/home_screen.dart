@@ -3,7 +3,7 @@ import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/presentation/carts_page/carts_page.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 import '../products_page_screen/products_page_screen.dart';
-import '../products_page_screen/widgets/productcard_item_widget.dart';
+//import '../products_page_screen/widgets/productcard_item_widget.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 

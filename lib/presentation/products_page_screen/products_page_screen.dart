@@ -6,7 +6,6 @@ import 'package:vendeaze/widgets/app_bar/appbar_title.dart';
 import 'package:vendeaze/widgets/app_bar/custom_app_bar.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 import '../carts_page/carts_page.dart';
-
 class ProductsPageScreen extends StatefulWidget {
   final String categoryName;
 
@@ -65,14 +64,16 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Total Price: ₹${totalPrice.toStringAsFixed(2)}'),
-        ElevatedButton(
-  onPressed: () {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => CartsPage(cartItems: productQuantities),
-    ));
-  },
-  child: Text('View Cart'),
-),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CartsPage(),
+                        ),
+                      );
+                    },
+                    child: Text('View Cart'),
+                  ),
                 ],
               ),
             ),
