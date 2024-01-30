@@ -1,18 +1,53 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/widgets/custom_elevated_button.dart';
 import 'package:vendeaze/widgets/custom_text_form_field.dart';
 
-// ... (imports)
-
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
+
+   void login(BuildContext context) async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if(email == "")
+    {
+      log("Please Fill the email ID");
+    }
+    else if(password == "")
+    {
+      log("Please Fill the password");
+    }
+    else
+    {
+      try {
+          // Removed the unused variable 'userCredential'
+          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+          log("Login Successful");
+          if(userCredential.user != null)
+          {
+            Navigator.pushNamed(context, AppRoutes.homeScreen);
+          }
+        } on FirebaseAuthException catch (e) {
+          log("Failed to create account: ${e.message}");
+        }
+    }
+   }
 
   //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -78,7 +113,7 @@ Widget build(BuildContext context) {
                             margin: EdgeInsets.only(left: 62.h),
                             buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnErrorBold,
                             onPressed: () {
-                              onTapLOGIN(context);
+                              login(context);
                             },
                           ),
                         ],
@@ -143,4 +178,14 @@ Widget build(BuildContext context) {
   void onTapLOGIN(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.homeScreen);
   }
+
+  @override
+  void dispose() {
+    // Dispose controllers and focus nodes when the widget is removed from the widget tree
+    emailController.dispose();
+    passwordController.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
+}
 }

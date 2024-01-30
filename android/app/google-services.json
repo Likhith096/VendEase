@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "472003495631",
-    "project_id": "vendease-2e07e",
-    "storage_bucket": "vendease-2e07e.appspot.com"
+    "project_number": "74259003795",
+    "firebase_url": "https://vend-ease-default-rtdb.firebaseio.com",
+    "project_id": "vend-ease",
+    "storage_bucket": "vend-ease.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:472003495631:android:bd3d691229d776b67059ba",
+        "mobilesdk_app_id": "1:74259003795:android:eb529bc1fe84c4f1ad1066",
         "android_client_info": {
           "package_name": "com.vendeaze.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "74259003795-i5l0v6frqvvgn6d0fk3r29kre46l5vu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB8mdQS94j8VukYm-35cIFNZFF6vyJXts4"
+          "current_key": "AIzaSyAK7IZF5J7J0jri5JN0p9GP7SGzLMslGQs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74259003795-i5l0v6frqvvgn6d0fk3r29kre46l5vu6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "74259003795-3rcput36t3qvbk4c8dki2dtv1p3ig5ig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vendeaze.app"
+              }
+            }
+          ]
         }
       }
     }

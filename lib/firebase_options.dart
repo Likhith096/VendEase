@@ -50,19 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB8mdQS94j8VukYm-35cIFNZFF6vyJXts4',
-    appId: '1:472003495631:android:bd3d691229d776b67059ba',
-    messagingSenderId: '472003495631',
-    projectId: 'vendease-2e07e',
-    storageBucket: 'vendease-2e07e.appspot.com',
+    apiKey: 'AIzaSyAK7IZF5J7J0jri5JN0p9GP7SGzLMslGQs',
+    appId: '1:74259003795:android:eb529bc1fe84c4f1ad1066',
+    messagingSenderId: '74259003795',
+    projectId: 'vend-ease',
+    databaseURL: 'https://vend-ease-default-rtdb.firebaseio.com',
+    storageBucket: 'vend-ease.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD45QuyrBSBAgjDLrDoioztcfizgfYo0p0',
-    appId: '1:472003495631:ios:69c9ac0e49e442337059ba',
-    messagingSenderId: '472003495631',
-    projectId: 'vendease-2e07e',
-    storageBucket: 'vendease-2e07e.appspot.com',
+    apiKey: 'AIzaSyBX9cnLVsxJ2SiH0RFwb-ykTDaNbOe2ca0',
+    appId: '1:74259003795:ios:6f248b825fe422f7ad1066',
+    messagingSenderId: '74259003795',
+    projectId: 'vend-ease',
+    databaseURL: 'https://vend-ease-default-rtdb.firebaseio.com',
+    storageBucket: 'vend-ease.appspot.com',
+    iosClientId: '74259003795-3rcput36t3qvbk4c8dki2dtv1p3ig5ig.apps.googleusercontent.com',
     iosBundleId: 'com.vendeaze.app',
   );
 }
