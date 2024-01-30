@@ -12,12 +12,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String _userName = ''; // Variable to store the user's name
+  String _phoneNumber = ''; // Variable for phone number
+  String _email = '';       // Variable for email
+
 
   @override
   void initState() {
     super.initState();
-    // Call a method to fetch the user's name from the backend when the screen initializes
     _fetchUserName();
+    _fetchContactInfo();
   }
 
   Future<void> _fetchUserName() async {
@@ -49,6 +52,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // String userName = "Bhupendra Jogi";
     setState(() {
       _userName = username;
+    });
+  }
+
+     Future<void> _fetchContactInfo() async {
+    // Fetch and set the contact information from your backend or Firebase
+    // Example:
+    // _phoneNumber = await BackendService.fetchPhoneNumber();
+    // _email = await BackendService.fetchEmail();
+    setState(() {
+      _phoneNumber = '123-456-7890'; // Example phone number
+      _email = 'info@example.com';   // Example email
     });
   }
 
@@ -105,20 +119,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileSection(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 1.v),
-          decoration: AppDecoration.fillPrimary.copyWith(
-            borderRadius: BorderRadiusStyle.roundedBorder10,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 22.v),
-              Text("My Orders", style: theme.textTheme.headlineLarge),
-            ],
-          ),
-        ),
+        // Container(
+        //   width: double.maxFinite,
+        //   padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 1.v),
+        //   decoration: AppDecoration.fillPrimary.copyWith(
+        //     borderRadius: BorderRadiusStyle.roundedBorder10,
+        //   ),
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       SizedBox(height: 22.v),
+        //       Text("My Orders", style: theme.textTheme.headlineLarge),
+        //     ],
+        //   ),
+        // ),
         SizedBox(height: 18.v),
         Container(
           width: double.maxFinite,
@@ -135,14 +149,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         SizedBox(height: 17.v),
-        Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(horizontal: 13.h, vertical: 12.v),
-          decoration: AppDecoration.fillPrimary.copyWith(
-            borderRadius: BorderRadiusStyle.roundedBorder10,
-          ),
-          child: Text("Contact Us", style: theme.textTheme.headlineLarge),
-        ),
+        _buildContactUsSection(),
+        // Container(
+        //   width: double.maxFinite,
+        //   padding: EdgeInsets.symmetric(horizontal: 13.h, vertical: 12.v),
+        //   decoration: AppDecoration.fillPrimary.copyWith(
+        //     borderRadius: BorderRadiusStyle.roundedBorder10,
+        //   ),
+        //   child: Text("Contact Us", style: theme.textTheme.headlineLarge),
+        // ),
         SizedBox(height: 16.v),
         GestureDetector(
           onTap: () {
@@ -164,6 +179,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+
+   Widget _buildContactUsSection() {
+    return GestureDetector(
+      onTap: () {
+        // Show phone number and email in a dialog or another widget
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Contact Us"),
+              content: Text("Phone: $_phoneNumber\nEmail: $_email"),
+              actions: [
+                TextButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 9.v),
+        decoration: AppDecoration.fillPrimary.copyWith(
+          borderRadius: BorderRadiusStyle.roundedBorder10,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 7.v),
+            Text("Contact Us", style: theme.textTheme.headlineLarge),
+          ],
+        ),
+      ),
     );
   }
 
