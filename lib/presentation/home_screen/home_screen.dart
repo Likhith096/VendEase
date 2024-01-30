@@ -3,6 +3,7 @@ import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/presentation/carts_page/carts_page.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 import '../products_page_screen/products_page_screen.dart';
+//import 'package:location/location.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -98,7 +99,7 @@ Widget _buildFacts(BuildContext context) {
 
 
   /// Section Widget
-  Widget _buildLocationRow(BuildContext context) {
+Widget _buildLocationRow(BuildContext context) {
     return SizedBox(
       height: 100.v,
       width: 389.h,
@@ -141,7 +142,8 @@ Widget _buildFacts(BuildContext context) {
         ],
       ),
     );
-  }
+}
+
 
   /// Section Widget
 Widget _buildCategoriesRow(BuildContext context) {
@@ -209,4 +211,32 @@ Widget getCurrentPage(String currentRoute) {
       return HomeScreen();
   }
 }
+
+// Future<String> getCurrentLocation() async {
+//   Location location = new Location();
+
+//   bool _serviceEnabled;
+//   PermissionStatus _permissionGranted;
+//   LocationData _locationData;
+
+//   _serviceEnabled = await location.serviceEnabled();
+//   if (!_serviceEnabled) {
+//     _serviceEnabled = await location.requestService();
+//     if (!_serviceEnabled) {
+//       return "Location service disabled";
+//     }
+//   }
+
+//   _permissionGranted = await location.hasPermission();
+//   if (_permissionGranted == PermissionStatus.denied) {
+//     _permissionGranted = await location.requestPermission();
+//     if (_permissionGranted != PermissionStatus.granted) {
+//       return "Location permission denied";
+//     }
+//   }
+
+//   _locationData = await location.getLocation();
+//   return "${_locationData.latitude}, ${_locationData.longitude}";
+// }
+
 }
