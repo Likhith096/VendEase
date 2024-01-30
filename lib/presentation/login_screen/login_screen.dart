@@ -113,7 +113,8 @@ Widget build(BuildContext context) {
                             margin: EdgeInsets.only(left: 62.h),
                             buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnErrorBold,
                             onPressed: () {
-                              login(context);
+                              //login(context);
+                              onTapLOGIN(context);
                             },
                           ),
                         ],

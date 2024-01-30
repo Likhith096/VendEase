@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart'; // Ensure this import is correct
 import 'package:vendeaze/widgets/custom_elevated_button.dart'; // Ensure this import is correct
 import 'package:vendeaze/widgets/custom_text_form_field.dart'; // Ensure this import is correct
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // ignore_for_file: must_be_immutable
 class SignUpScreen extends StatefulWidget {
@@ -27,12 +29,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  void _handleGoogleSignIn() async {
+    void _handleGoogleSignIn() async {
     try {
       GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
       UserCredential userCredential = await _auth.signInWithProvider(_googleAuthProvider);
       if (userCredential.user != null) {
-        // Navigate to the home screen
+        log("User's name: ${userCredential.user!.displayName}");
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'name': userCredential.user!.displayName,
+          'email': userCredential.user!.email,
+          // Add more fields as needed
+        });
         Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
       }
     } catch (error) {
@@ -59,6 +66,12 @@ Future<void> createAccount() async {
       log("User Created");
       if(userCredential.user != null)
       {
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'name': name,
+          'email': email,
+          'password':password,
+        });
+
         Navigator.pushNamed(context, AppRoutes.loginScreen);
       }
 

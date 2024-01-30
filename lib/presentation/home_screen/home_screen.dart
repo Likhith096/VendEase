@@ -3,12 +3,12 @@ import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/presentation/carts_page/carts_page.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 import '../products_page_screen/products_page_screen.dart';
-//import '../products_page_screen/widgets/productcard_item_widget.dart';
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
+  final PageController pageController = PageController(viewportFraction: 0.8);
  @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,8 +24,8 @@ class HomeScreen extends StatelessWidget {
                 style: CustomTextStyles.headlineLargePrimaryContainer,
               ),
               SizedBox(height: 55.v),
-              // _buildProductCard(context),
-              // SizedBox(height: 30.v), // Replace Spacer with a SizedBox
+              _buildFacts(context),
+              SizedBox(height: 30.v), // Replace Spacer with a SizedBox
             ],
           ),
         ),
@@ -36,36 +36,64 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-// Widget _buildProductCard(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.only(
-//         left: 24.h,
-//         right: 17.h,
-//       ),
-//       child: GridView.builder(
-//         shrinkWrap: true,
-//         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//           mainAxisExtent: 216.v,
-//           crossAxisCount: 2,
-//           mainAxisSpacing: 29.h,
-//           crossAxisSpacing: 29.h,
-//         ),
-//         physics: NeverScrollableScrollPhysics(),
-//         itemCount: 4,
-//         itemBuilder: (context, index) {
-//           return ProductcardItemWidget(
-//             onAddPressed: () {
-//        Navigator.of(context).push(
-//               MaterialPageRoute(
-//                 builder: (context) => ProductsPageScreen(
-//                   categoryName: 'Your Category Name', // Provide the category name if needed
-//                 ),
-//                 ));},
-//           );
-//         },
-//       ),
-//     );
-//   }
+
+Widget _buildFacts(BuildContext context) {
+    final List<String> foodFacts = [
+      "Fact 1: Eating fruits and vegetables can reduce the risk of chronic diseases.",
+      "Fact 2: Whole grains are a great source of fiber and nutrients.",
+      "Fact 3: Drinking water before meals can help with weight loss."
+    ];
+
+    return Container(
+      height: 200.v, // Adjust height as needed
+      child: PageView.builder(
+        controller: pageController,
+        itemCount: foodFacts.length,
+        itemBuilder: (context, index) {
+          return AnimatedBuilder(
+            animation: pageController,
+            builder: (context, child) {
+              double value = 1.0;
+              if (pageController.position.haveDimensions) {
+                value = pageController.page! - index;
+                value = (1 - (value.abs() * .2)).clamp(0.8, 1.0);
+              }
+              return Center(
+                child: SizedBox(
+                  height: Curves.easeInOut.transform(value) * 200.v,
+                  width: Curves.easeInOut.transform(value) * 250.h,
+                  child: child,
+                ),
+              );
+            },
+            child: Card(
+              elevation: 4.h,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.h),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(16.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      foodFacts[index],
+                      style: TextStyle(
+                        fontSize: 16.h,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    // Add more content or styling as needed
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
 
 
