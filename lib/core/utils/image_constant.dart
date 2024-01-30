@@ -72,6 +72,30 @@ class ImageConstant {
 
   static String imgUser = '$imagePath/img_user.svg';
 
+
+  // Payment images
+  static String imgGroup8 = '$imagePath/img_group_8.svg';
+
+  // Confirmed images
+  static String imgFrame13 = '$imagePath/img_frame_13.svg';
+
+  static String imgIconCheckCircled = '$imagePath/img_icon_check_circled.svg';
+
+  // Payment-Card images
+  static String imgLine1 = '$imagePath/img_line_1.svg';
+
+  static String imgLine2 = '$imagePath/img_line_2.svg';
+
+  static String imgTelevision = '$imagePath/img_television.svg';
+
+  static String imgContrast = '$imagePath/img_contrast.svg';
+
+  static String imgThumbsUp = '$imagePath/img_thumbs_up.svg';
+  
+  static String imgArrowLeft = '$imagePath/img_arrow_left.svg';
+
+  static String imgCheckmark = '$imagePath/img_checkmark.svg';
+  
   static String imgRectangle81 = '$imagePath/img_rectangle_81.png';
 
   static String imgMdiLocation = '$imagePath/img_mdi_location.svg';

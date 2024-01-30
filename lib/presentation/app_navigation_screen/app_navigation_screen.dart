@@ -81,15 +81,27 @@ class AppNavigationScreen extends StatelessWidget {
                         ),
                         _buildScreenTitle(
                           context,
-                          screenTitle: "Home-with-cart",
-                          onTapScreenTitle: () => onTapScreenTitle(
-                              context, AppRoutes.homeWithCartScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
                           screenTitle: "Profile",
                           onTapScreenTitle: () => onTapScreenTitle(
                               context, AppRoutes.profileScreen),
+                        ),
+                        _buildScreenTitle(
+                          context,
+                          screenTitle: "Payment",
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              context, AppRoutes.paymentScreen),
+                        ),
+                        _buildScreenTitle(
+                          context,
+                          screenTitle: "Confirmed",
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              context, AppRoutes.confirmedScreen),
+                        ),
+                        _buildScreenTitle(
+                          context,
+                          screenTitle: "Payment-Card",
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              context, AppRoutes.paymentCardScreen),
                         ),
                       ],
                     ),

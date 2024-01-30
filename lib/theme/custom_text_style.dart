@@ -5,8 +5,20 @@ import '../core/app_export.dart';
 /// categorized by different font families and weights.
 /// Additionally, this class includes extensions on [TextStyle] to easily apply specific font families to text.
 
+extension CustomTextStyleExtension on TextStyle {
+  TextStyle get inter => copyWith(
+    fontFamily: 'Inter', 
+    letterSpacing: 1.2
+  );
+}
 class CustomTextStyles {
   // Body style
+    static get bodySmallErrorContainer => theme.textTheme.bodySmall!.copyWith(
+        color: theme.colorScheme.errorContainer,
+      );
+        static get bodySmallPrimary => theme.textTheme.bodySmall!.copyWith(
+        color: theme.colorScheme.primary,
+      );
   static get bodyLargeKronaOne => theme.textTheme.bodyLarge!.kronaOne;
   // Display text style
   static get displayMedium50 => theme.textTheme.displayMedium!.copyWith(
@@ -32,9 +44,21 @@ class CustomTextStyles {
         fontSize: 32.fSize,
         fontWeight: FontWeight.w700,
       );
+        static get titleMediumPrimary => theme.textTheme.titleMedium!.copyWith(
+        color: theme.colorScheme.primary,
+        fontSize: 16.fSize,
+        fontWeight: FontWeight.w600,
+      );
   static get headlineLargeOnError => theme.textTheme.headlineLarge!.copyWith(
         color: theme.colorScheme.onError.withOpacity(0.5),
         fontSize: 33.fSize,
+      );
+        // Title text style
+  static get titleLargeInterPrimary =>
+      theme.textTheme.titleLarge!.inter.copyWith(
+        color: theme.colorScheme.primary,
+        fontSize: 22.fSize,
+        fontWeight: FontWeight.w600,
       );
   static get headlineLargePrimaryContainer =>
       theme.textTheme.headlineLarge!.copyWith(

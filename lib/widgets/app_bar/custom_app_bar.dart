@@ -62,12 +62,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: appTheme.pink100,
           ),
         );
+        case Style.bgShadow:
+        return Container(
+          height: 30.v,
+          width: double.maxFinite,
+          decoration: BoxDecoration(),
+        );
       default:
         return null;
     }
   }
+
+  
 }
 
 enum Style {
   bgFill,
+  bgShadow,
 }

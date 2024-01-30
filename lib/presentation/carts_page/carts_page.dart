@@ -143,6 +143,9 @@ class CartsPage extends StatelessWidget {
       ),
     );
   }
+  void onTapPtoP(BuildContext context) {
+  Navigator.pushNamed(context, AppRoutes.paymentScreen);
+  }
 
   /// Section Widget
   Widget _buildProceedToPaySection(BuildContext context) {
@@ -185,6 +188,9 @@ class CartsPage extends StatelessWidget {
               text: "Proceed to Pay",
               buttonStyle: CustomButtonStyles.outlineOnError,
               buttonTextStyle: CustomTextStyles.headlineMedium28,
+              onPressed: () {
+              onTapPtoP(context);
+              },
             ),
           ),
         ],
