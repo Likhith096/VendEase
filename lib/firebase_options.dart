@@ -50,11 +50,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB8mdQS94j8VukYm-35cIFNZFF6vyJXts4',
-    appId: '1:472003495631:android:bd3d691229d776b67059ba',
-    messagingSenderId: '472003495631',
-    projectId: 'vendease-2e07e',
-    storageBucket: 'vendease-2e07e.appspot.com',
+    apiKey: 'AIzaSyAK7IZF5J7J0jri5JN0p9GP7SGzLMslGQs',
+    appId: '1:74259003795:android:eb529bc1fe84c4f1ad1066',
+    messagingSenderId: '74259003795',
+    projectId: 'vend-ease',
+    storageBucket: 'vend-ease.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

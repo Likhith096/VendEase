@@ -16,6 +16,49 @@ class AppDecoration {
         color: theme.colorScheme.primary,
       );
 
+        static BoxDecoration get fillOnErrorContainer => BoxDecoration(
+        color: theme.colorScheme.onErrorContainer,
+      );
+  // Outline decorations
+  static BoxDecoration get outlinePrimary => BoxDecoration(
+        color: appTheme.purple50,
+        border: Border.all(
+          color: theme.colorScheme.primary,
+          width: 8.h,
+          strokeAlign: strokeAlignOutside,
+        ),
+      );
+  static BoxDecoration get outlinePrimaryContainer1 => BoxDecoration();
+  static BoxDecoration get outlinePrimaryContainer => BoxDecoration(
+        color: theme.colorScheme.onErrorContainer,
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primaryContainer,
+            spreadRadius: 2.h,
+            blurRadius: 2.h,
+            offset: Offset(
+              0,
+              2,
+            ),
+          ),
+        ],
+      );
+
+      static BoxDecoration get outlinePrimaryContainer2 => BoxDecoration(
+        color: appTheme.whiteA700,
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primaryContainer,
+            spreadRadius: 2.h,
+            blurRadius: 2.h,
+            offset: Offset(
+              0,
+              2,
+            ),
+          ),
+        ],
+      );
+
   // Outline decorations
   static BoxDecoration get outlineOnError => BoxDecoration(
         color: theme.colorScheme.primary,
@@ -97,6 +140,18 @@ class BorderRadiusStyle {
       );
   static BorderRadius get roundedBorder64 => BorderRadius.circular(
         64.h,
+  );
+          // Circle borders
+  static BorderRadius get circleBorder12 => BorderRadius.circular(
+        12.h,
+      );
+
+  // Rounded borders
+  static BorderRadius get roundedBorder34 => BorderRadius.circular(
+        34.h,
+      );
+  static BorderRadius get roundedBorder6 => BorderRadius.circular(
+        6.h,
       );
 }
 

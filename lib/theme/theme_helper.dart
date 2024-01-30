@@ -146,6 +146,7 @@ class ColorSchemes {
     // On colors(text colors)
     onPrimary: Color(0XFF2817F7),
     onPrimaryContainer: Color(0XFF3B004A),
+
   );
 }
 
@@ -163,6 +164,11 @@ class PrimaryColors {
   // Purple
   Color get purple400 => Color(0XFFA451C1);
   Color get purpleA200 => Color(0XFFCC44FB);
+
+    Color get purple50 => Color(0XFFFFE6FF);
+
+  // White
+  Color get whiteA700 => Color(0XFFFEFDFF);
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();
