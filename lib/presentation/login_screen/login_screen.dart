@@ -113,8 +113,7 @@ Widget build(BuildContext context) {
                             margin: EdgeInsets.only(left: 62.h),
                             buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnErrorBold,
                             onPressed: () {
-                              //login(context);
-                              onTapLOGIN(context);
+                              login(context);
                             },
                           ),
                         ],
@@ -188,5 +187,5 @@ Widget build(BuildContext context) {
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
     super.dispose();
-  }
+}
 }
