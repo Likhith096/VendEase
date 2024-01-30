@@ -149,9 +149,9 @@ Widget _buildLocationRow(BuildContext context) {
 Widget _buildCategoriesRow(BuildContext context) {
   // Updated list with category name and image path
   final List<Map<String, String>> categories = [
-    {"name": "Category1", "image": ImageConstant.imgCat1},
-    {"name": "Category2", "image": ImageConstant.imgCat2},
-    {"name": "Category3", "image": ImageConstant.imgCat3},
+    {"name": "Snacks", "image": ImageConstant.imgCat1},
+    {"name": "Chips", "image": ImageConstant.imgCat2},
+    {"name": "Juices", "image": ImageConstant.imgCat3},
     // ... other categories
   ];
 
