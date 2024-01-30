@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../carts_page/widgets/productlist_item_widget.dart';
-import '../carts_page/widgets/productlistsection_item_widget.dart';
+// import '../carts_page/widgets/productlistsection_item_widget.dart';
 
 class ProductlistsectionItemWidget extends StatelessWidget {
   final String productName;
@@ -19,12 +19,42 @@ class ProductlistsectionItemWidget extends StatelessWidget {
     required this.quantity,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
-    // Simple UI for displaying a product item
-    return ListTile(
-      title: Text(productName),
-      subtitle: Text('Price: $productPrice, Quantity: $quantity'),
+    return Scaffold(
+      body: Container(
+        width: double.maxFinite,
+        decoration: AppDecoration.fillPrimary,
+        child: Column(
+          children: [
+            CustomImageView(
+              imagePath: ImageConstant.imgRectangle81,
+              height: 55.v,
+              width: 390.h,
+            ),
+            SizedBox(height: 37.v),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                height: 22.v,
+                width: 213.h,
+                margin: EdgeInsets.only(left: 10.h),
+                child: Text(
+                  "Selected Products",
+                  style: CustomTextStyles.bodyLargeKronaOne,
+                ),
+              ),
+            ),
+            SizedBox(height: 16.v), // Add some space before the list tile
+            ListTile(
+              title: Text(productName),
+              subtitle: Text('Price: $productPrice, Quantity: $quantity'),
+            ),
+            // ... Add more widgets or logic as needed
+          ],
+        ),
+      ),
     );
   }
 }
@@ -46,37 +76,37 @@ class CartsPage extends StatelessWidget {
 
   Widget _buildProceedToPaySection(BuildContext context, double totalPrice) {
     return SizedBox(
-      width: double.maxFinite,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 58.v,
-            width: 101.h,
-            padding: EdgeInsets.symmetric(
-              horizontal: 29.h,
-              vertical: 4.v,
-            ),
-            decoration: AppDecoration.outlineOnError2,
-            child: Text(
-              "Bill: ₹${totalPrice.toStringAsFixed(2)}",
-              style: theme.textTheme.headlineMedium,
-            ),
-          ),
-          Expanded(
-            child: CustomElevatedButton(
-              height: 58.v,
-              text: "Proceed to Pay",
-              buttonStyle: CustomButtonStyles.outlineOnError,
-              buttonTextStyle: CustomTextStyles.headlineMedium28,
-              onPressed: () {
-                onTapPtoP(context);
-              },
-            ),
-          ),
-        ],
+  width: double.maxFinite,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        height: 58.v,
+        width: 150.h, // Increased width from 101.h to 150.h
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.h, // Adjusted horizontal padding for better visibility
+          vertical: 4.v,
+        ),
+        decoration: AppDecoration.outlineOnError2,
+        child: Text(
+          "Bill: ₹${totalPrice.toStringAsFixed(2)}",
+          style: theme.textTheme.headlineMedium,
+        ),
       ),
-    );
+      Expanded(
+        child: CustomElevatedButton(
+          height: 58.v,
+          text: "Proceed to Pay",
+          buttonStyle: CustomButtonStyles.outlineOnError,
+          buttonTextStyle: CustomTextStyles.headlineMedium28,
+          onPressed: () {
+            onTapPtoP(context);
+          },
+        ),
+      ),
+    ],
+  ),
+);
   }
 
   void onTapPtoP(BuildContext context) {
