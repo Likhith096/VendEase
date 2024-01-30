@@ -40,26 +40,20 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
     print("Number of products found: ${querySnapshot.docs.length}");
 
     List<Product> fetchedProducts = querySnapshot.docs.map((doc) {
-        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
-        if (data != null) {
-          String id = doc.id;
-          String name = data['Name'] ?? '';
-          double price = (data['Price'] ?? 0.0).toDouble();
-          double weight = (data['Weight'] ?? 0.0).toDouble();
+      Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+      if (data != null) {
+        return Product(
+          id: doc.id,
+          name: data['Name'] ?? '',
+          price: (data['Price'] ?? 0.0).toDouble(),
+          weight: (data['Weight'] ?? 0.0).toDouble(),
+          imageURL: data['imageURL'] ?? '', // Make sure this matches your field name in Firestore
+        );
+      } else {
+        throw Exception('Document data is null');
+      }
+    }).toList();
 
-          // Correctly use the local variables
-          print('Fetched product: $name, Price: $price');
-
-          return Product(
-            id: id,
-            name: name,
-            price: price,
-            weight: weight,
-          );
-        } else {
-          throw Exception('Document data is null');
-        }
-      }).toList();
 
 
     this.products = fetchedProducts; // Store the fetched products in the state variable
@@ -81,7 +75,10 @@ void addProduct(String productId) async {
   print('Adding product: $productId');
 
   // Find the product in the list
-  Product? productDetail = products.firstWhere((p) => p.id == productId, orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0));
+  Product? productDetail = products.firstWhere(
+    (p) => p.id == productId,
+    orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0, imageURL: ''), // Add default imageURL here
+  );
 
   // Check if productDetail is a valid product
   if (productDetail.id.isEmpty) {
@@ -116,12 +113,17 @@ void addProduct(String productId) async {
           'quantity': 1,
           'price': productDetail.price,
           'name': productDetail.name,
+          'imageURL': productDetail.imageURL, // Include imageURL here
           'timestamp': FieldValue.serverTimestamp(),
         });
       } else {
         int currentQuantity = cartSnapshot['quantity'];
         print('Updating cart item quantity to ${currentQuantity + 1}');
-        transaction.update(cartRef, {'quantity': currentQuantity + 1});
+        // Consider also updating the imageURL if necessary here
+        transaction.update(cartRef, {
+          'quantity': currentQuantity + 1,
+          // 'imageURL': productDetail.imageURL, // Uncomment if you wish to update imageURL as well
+        });
       }
     } catch (e) {
       print('Error updating cart: $e');
@@ -172,10 +174,9 @@ void addProduct(String productId) async {
 
    double getProductPrice(String productId) {
         var product = products.firstWhere(
-          (p) => p.id == productId,
-          orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0)
-        );
-
+              (p) => p.id == productId,
+              orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0, imageURL: ''), // Add default imageURL here
+            );
         // Debug print
         print('Product ID: $productId, Price: ${product.price}');
 
@@ -236,7 +237,7 @@ void addProduct(String productId) async {
     );
   }
 
- Widget _buildProductCard(BuildContext context, List<Product> products) {
+Widget _buildProductCard(BuildContext context, List<Product> products) {
   return ListView.builder(
     itemCount: products.length,
     itemBuilder: (context, index) {
@@ -245,6 +246,9 @@ void addProduct(String productId) async {
 
       return Card(
         child: ListTile(
+          leading: product.imageURL.isNotEmpty 
+              ? Image.network(product.imageURL, width: 50, height: 50, fit: BoxFit.cover)
+              : SizedBox(width: 50, height: 50), // Placeholder in case of no imageURL
           title: Text(product.name),
           subtitle: Text('₹${product.price.toStringAsFixed(2)} | Weight: ${product.weight}'),
           trailing: Row(
@@ -266,6 +270,7 @@ void addProduct(String productId) async {
     },
   );
 }
+
 
   Widget _buildBottomBar(BuildContext context) {
     return BottomAppBar(
