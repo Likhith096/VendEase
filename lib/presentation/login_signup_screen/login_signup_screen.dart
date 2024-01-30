@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
+// import 'package:vend_ease/email_auth/signUpScreen.dart';
+
 
 class LoginSignupScreen extends StatelessWidget {
   const LoginSignupScreen({Key? key}) : super(key: key);
@@ -119,4 +121,6 @@ class LoginSignupScreen extends StatelessWidget {
   onTapView1(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
   }
+
+
 }
