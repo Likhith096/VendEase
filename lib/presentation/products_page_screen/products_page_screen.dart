@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vendeaze/core/app_export.dart';
-// import 'package:vendeaze/presentation/carts_page/carts_page.dart';
+import 'package:vendeaze/models/product_model.dart';
 import 'package:vendeaze/widgets/app_bar/appbar_leading_image.dart';
 import 'package:vendeaze/widgets/app_bar/appbar_title.dart';
 import 'package:vendeaze/widgets/app_bar/custom_app_bar.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 import '../carts_page/carts_page.dart';
+
 class ProductsPageScreen extends StatefulWidget {
   final String categoryName;
 
   ProductsPageScreen({Key? key, required this.categoryName}) : super(key: key);
-
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   _ProductsPageScreenState createState() => _ProductsPageScreenState();
@@ -19,13 +19,48 @@ class ProductsPageScreen extends StatefulWidget {
 
 class _ProductsPageScreenState extends State<ProductsPageScreen> {
   Map<String, int> productQuantities = {};
+  late Future<List<Product>> _productsFuture;
 
-  // Example product prices (you might want to fetch these from a database or API)
-  Map<String, double> productPrices = {
-    'Product1': 10.0,
-    'Product2': 15.0,
-    // Add more products as needed
-  };
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = fetchProductsFromFirestore();
+  }
+
+  Future<List<Product>> fetchProductsFromFirestore() async {
+    try {
+      // Use a query to filter products based on the selected category
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Products')
+          .where('Category', isEqualTo: widget.categoryName)
+          .get();
+            print("Category: ${widget.categoryName}");
+            print("Number of products found: ${querySnapshot.docs.length}");
+
+      List<Product> products = querySnapshot.docs.map((doc) {
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        if (data != null) {
+          String name = data['Name'] ?? '';
+          double price = (data['Price'] ?? 0.0).toDouble();
+          double weight = (data['Weight'] ?? 0.0).toDouble();
+
+          return Product(
+            name: name,
+            price: price,
+            weight: weight,
+          );
+        } else {
+          throw Exception('Document data is null');
+        }
+      }).toList();
+
+      return products;
+    } catch (error) {
+      print('Error fetching products: $error');
+      return []; // Return an empty list if fetching fails
+    }
+  }
+
 
   void addProduct(String productId) {
     setState(() {
@@ -40,52 +75,43 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
   double calculateTotalPrice() {
     double totalPrice = 0.0;
     productQuantities.forEach((productId, quantity) {
-      double price = productPrices[productId] ?? 0.0;
-      totalPrice += price * quantity;
+      totalPrice += getProductPrice(productId) * quantity;
     });
     return totalPrice;
   }
 
-@override
-  Widget build(BuildContext context) {
-    double totalPrice = calculateTotalPrice();
+  double getProductPrice(String productId) {
+    // Implement logic to fetch price from productPrices map or backend
+    // For now, we'll assume a hardcoded price
+    return 10.0; // Replace with actual logic
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: Column(
-          children: [
-            Expanded(
-              child: _buildProductCard(context),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Total Price: ₹${totalPrice.toStringAsFixed(2)}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CartsPage(),
-                        ),
-                      );
-                    },
-                    child: Text('View Cart'),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        body: FutureBuilder<List<Product>>(
+          future: _productsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              List<Product>? products = snapshot.data;
+              if (products != null && products.isNotEmpty) {
+                return _buildProductCard(context, products);
+              } else {
+                return Center(child: Text('No products available'));
+              }
+            }
+          },
         ),
         bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
-
-
-
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
@@ -113,30 +139,33 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context) {
-    // Assuming you have a list of product IDs
-    List<String> productIds = ['Product1', 'Product2']; // Populate with your actual product IDs
-
+  Widget _buildProductCard(BuildContext context, List<Product> products) {
     return ListView.builder(
-      itemCount: productIds.length,
+      itemCount: products.length,
       itemBuilder: (context, index) {
-        String productId = productIds[index];
+        Product product = products[index];
         return Card(
           child: ListTile(
-            title: Text(productId),
-            subtitle: Text('₹${productPrices[productId]?.toStringAsFixed(2) ?? '0.00'}'),            trailing: Row(
+            title: Text(product.name),
+            subtitle: Text(
+                '₹${product.price.toStringAsFixed(2)} | Weight: ${product.weight}'),
+            trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: Icon(Icons.remove),
-                  onPressed: productQuantities[productId] != null && productQuantities[productId]! > 0
-                      ? () => setState(() => productQuantities[productId] = productQuantities[productId]! - 1)
+                  onPressed: productQuantities.containsKey(product.name) &&
+                          productQuantities[product.name]! > 0
+                      ? () => setState(() => productQuantities[product.name] =
+                          productQuantities[product.name]! - 1)
                       : null,
                 ),
-                Text(productQuantities[productId]?.toString() ?? '0'),
+                Text(productQuantities.containsKey(product.name)
+                    ? productQuantities[product.name].toString()
+                    : '0'),
                 IconButton(
                   icon: Icon(Icons.add),
-                  onPressed: () => addProduct(productId),
+                  onPressed: () => addProduct(product.name),
                 ),
               ],
             ),
@@ -160,19 +189,12 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
   String getCurrentRoute(BottomBarEnum type) {
     switch (type) {
       case BottomBarEnum.Heroiconssolidhome:
-        // Navigate to home
         return '/';
       case BottomBarEnum.Search:
-        // Navigate to search
         return '/';
       case BottomBarEnum.User:
-        // Navigate to user profile or settings
         return '/';
-      // case BottomBarEnum.Cart:
-      //   // Navigate to cart page
-      //   return AppRoutes.cartsPage;
       default:
-        // Default navigation
         return '/';
     }
   }
