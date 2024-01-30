@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:vendeaze/core/app_export.dart';
 
 class CustomBottomBar extends StatefulWidget {
@@ -33,70 +32,46 @@ class CustomBottomBarState extends State<CustomBottomBar> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
     return SizedBox(
-      height: 54.v,
-      child: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedFontSize: 0,
-        elevation: 0,
-        currentIndex: selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        items: List.generate(bottomMenuList.length, (index) {
-          return BottomNavigationBarItem(
-            icon: SizedBox(
-              height: 36.adaptSize,
-              width: 36.adaptSize,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgSearch,
-                    height: 36.adaptSize,
-                    width: 36.adaptSize,
-                    alignment: Alignment.center,
-                  ),
-                  CustomImageView(
-                    imagePath: bottomMenuList[index].icon,
-                    height: 36.adaptSize,
-                    width: 36.adaptSize,
-                    color: theme.colorScheme.onError.withOpacity(1),
-                    alignment: Alignment.center,
-                  ),
-                ],
-              ),
-            ),
-            activeIcon: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: fs.Svg(
-                    ImageConstant.imgHeroiconsSolidHome,
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: CustomImageView(
-                imagePath: bottomMenuList[index].activeIcon,
-                height: 36.adaptSize,
-                width: 36.adaptSize,
-                color: theme.colorScheme.onError.withOpacity(1),
-              ),
-            ),
-            label: '',
-          );
-        }),
-        //currentIndex:selectedIndex,
-        onTap: (index) {
-          setState(() {
-          selectedIndex = index;
-        });
-        Navigator.pushNamed(context, getCurrentRoute(bottomMenuList[index].type));  
-        },
-      ),
+        height: 54.v,
+        child: BottomNavigationBar(
+            backgroundColor: Color.fromARGB(0, 25, 215, 25),
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            selectedFontSize: 0,
+            elevation: 0,
+            currentIndex: selectedIndex,
+            type: BottomNavigationBarType.fixed,
+            items: List.generate(bottomMenuList.length, (index) {
+                return BottomNavigationBarItem(
+                    icon: CustomImageView(
+                        imagePath: bottomMenuList[index].icon,
+                        height: 36.adaptSize,
+                        width: 36.adaptSize,
+                        color: selectedIndex == index
+                            ? Colors.red // Change color for selected icon
+                            : theme.colorScheme.onBackground, // Color for unselected icon
+                    ),
+                    activeIcon: CustomImageView(
+                        imagePath: bottomMenuList[index].activeIcon,
+                        height: 36.adaptSize,
+                        width: 36.adaptSize,
+                        color: Colors.red, // Set active icon color to red
+                    ),
+                    label: '',
+                );
+            }),
+            onTap: (index) {
+                setState(() {
+                    selectedIndex = index;
+                });
+                Navigator.pushNamed(context, getCurrentRoute(bottomMenuList[index].type));  
+            },
+        ),
     );
-  }
+}
+
 }
 
 /// Handling route based on bottom click actions
@@ -137,7 +112,7 @@ class DefaultWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: const Color.fromARGB(255, 212, 18, 18),
       padding: EdgeInsets.all(10),
       child: Center(
         child: Column(
