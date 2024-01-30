@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vendeaze/core/app_export.dart';
@@ -20,6 +21,7 @@ class ProductsPageScreen extends StatefulWidget {
 class _ProductsPageScreenState extends State<ProductsPageScreen> {
   Map<String, int> productQuantities = {};
   late Future<List<Product>> _productsFuture;
+  List<Product> products = [];
 
   @override
   void initState() {
@@ -27,24 +29,29 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
     _productsFuture = fetchProductsFromFirestore();
   }
 
-  Future<List<Product>> fetchProductsFromFirestore() async {
-    try {
-      // Use a query to filter products based on the selected category
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Products')
-          .where('Category', isEqualTo: widget.categoryName)
-          .get();
-            print("Category: ${widget.categoryName}");
-            print("Number of products found: ${querySnapshot.docs.length}");
+ Future<List<Product>> fetchProductsFromFirestore() async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Products')
+        .where('Category', isEqualTo: widget.categoryName)
+        .get();
 
-      List<Product> products = querySnapshot.docs.map((doc) {
+    print("Category: ${widget.categoryName}");
+    print("Number of products found: ${querySnapshot.docs.length}");
+
+    List<Product> fetchedProducts = querySnapshot.docs.map((doc) {
         Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
         if (data != null) {
+          String id = doc.id;
           String name = data['Name'] ?? '';
           double price = (data['Price'] ?? 0.0).toDouble();
           double weight = (data['Weight'] ?? 0.0).toDouble();
 
+          // Correctly use the local variables
+          print('Fetched product: $name, Price: $price');
+
           return Product(
+            id: id,
             name: name,
             price: price,
             weight: weight,
@@ -54,37 +61,127 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
         }
       }).toList();
 
-      return products;
-    } catch (error) {
-      print('Error fetching products: $error');
-      return []; // Return an empty list if fetching fails
+
+    this.products = fetchedProducts; // Store the fetched products in the state variable
+    return fetchedProducts;
+  } catch (error) {
+    print('Error fetching products: $error');
+    return []; // Return an empty list if fetching fails
+  }
+}
+
+
+  String getCurrentUserId() {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      return currentUser?.uid ?? '';
     }
+
+
+void addProduct(String productId) async {
+  print('Adding product: $productId');
+
+  // Find the product in the list
+  Product? productDetail = products.firstWhere((p) => p.id == productId, orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0));
+
+  // Check if productDetail is a valid product
+  if (productDetail.id.isEmpty) {
+    print('Product not found in the list');
+    return;
   }
 
+  setState(() {
+    if (productQuantities.containsKey(productId)) {
+      productQuantities[productId] = productQuantities[productId]! + 1;
+    } else {
+      productQuantities[productId] = 1;
+    }
+  });
 
-  void addProduct(String productId) {
-    setState(() {
-      if (productQuantities.containsKey(productId)) {
-        productQuantities[productId] = productQuantities[productId]! + 1;
+  String userId = getCurrentUserId();
+  if (userId.isEmpty) {
+    print('User ID is empty');
+    return;
+  }
+
+  DocumentReference cartRef = FirebaseFirestore.instance.collection('carts').doc(productId);
+
+  FirebaseFirestore.instance.runTransaction((transaction) async {
+    try {
+      DocumentSnapshot cartSnapshot = await transaction.get(cartRef);
+      if (!cartSnapshot.exists) {
+        print('Creating new cart item');
+        transaction.set(cartRef, {
+          'productId': productId,
+          'userId': userId,
+          'quantity': 1,
+          'price': productDetail.price,
+          'name': productDetail.name,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
       } else {
-        productQuantities[productId] = 1;
+        int currentQuantity = cartSnapshot['quantity'];
+        print('Updating cart item quantity to ${currentQuantity + 1}');
+        transaction.update(cartRef, {'quantity': currentQuantity + 1});
       }
-    });
+    } catch (e) {
+      print('Error updating cart: $e');
+    }
+  });
+}
+
+
+  void removeProduct(String productId) async {
+  if (!productQuantities.containsKey(productId) || productQuantities[productId]! <= 0) {
+    print('Product quantity is already 0 or not in cart');
+    return;
   }
 
-  double calculateTotalPrice() {
+  setState(() {
+    productQuantities[productId] = productQuantities[productId]! - 1;
+  });
+
+  // Update Firestore
+  DocumentReference cartRef = FirebaseFirestore.instance.collection('carts').doc(productId);
+  FirebaseFirestore.instance.runTransaction((transaction) async {
+    DocumentSnapshot cartSnapshot = await transaction.get(cartRef);
+    if (cartSnapshot.exists && cartSnapshot['quantity'] > 1) {
+      int currentQuantity = cartSnapshot['quantity'];
+      transaction.update(cartRef, {'quantity': currentQuantity - 1});
+    } else {
+      // If quantity becomes 0, consider removing the item from the cart
+      transaction.delete(cartRef);
+    }
+  });
+}
+
+
+ double calculateTotalPrice() {
     double totalPrice = 0.0;
     productQuantities.forEach((productId, quantity) {
-      totalPrice += getProductPrice(productId) * quantity;
+      double productPrice = getProductPrice(productId);
+      totalPrice += productPrice * quantity;
+
+      // Debug print
+      print('Product ID: $productId, Quantity: $quantity, Subtotal: ${productPrice * quantity}');
     });
     return totalPrice;
   }
 
-  double getProductPrice(String productId) {
-    // Implement logic to fetch price from productPrices map or backend
-    // For now, we'll assume a hardcoded price
-    return 10.0; // Replace with actual logic
-  }
+
+
+
+   double getProductPrice(String productId) {
+        var product = products.firstWhere(
+          (p) => p.id == productId,
+          orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0)
+        );
+
+        // Debug print
+        print('Product ID: $productId, Price: ${product.price}');
+
+        return product.price;
+      }
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,50 +236,61 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, List<Product> products) {
-    return ListView.builder(
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        Product product = products[index];
-        return Card(
-          child: ListTile(
-            title: Text(product.name),
-            subtitle: Text(
-                '₹${product.price.toStringAsFixed(2)} | Weight: ${product.weight}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: productQuantities.containsKey(product.name) &&
-                          productQuantities[product.name]! > 0
-                      ? () => setState(() => productQuantities[product.name] =
-                          productQuantities[product.name]! - 1)
-                      : null,
-                ),
-                Text(productQuantities.containsKey(product.name)
-                    ? productQuantities[product.name].toString()
-                    : '0'),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => addProduct(product.name),
-                ),
-              ],
-            ),
+ Widget _buildProductCard(BuildContext context, List<Product> products) {
+  return ListView.builder(
+    itemCount: products.length,
+    itemBuilder: (context, index) {
+      Product product = products[index];
+      int quantity = productQuantities[product.id] ?? 0;
+
+      return Card(
+        child: ListTile(
+          title: Text(product.name),
+          subtitle: Text('₹${product.price.toStringAsFixed(2)} | Weight: ${product.weight}'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(Icons.remove),
+                onPressed: () => removeProduct(product.id),
+              ),
+              Text('$quantity'),
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => addProduct(product.id),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-          context,
-          getCurrentRoute(type),
-        );
-      },
+    return BottomAppBar(
+      child: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'Total Price: ₹${calculateTotalPrice().toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 18),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to Cart Page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartsPage()), // Assuming CartsPage exists
+                );
+              },
+              child: Text('View Cart'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

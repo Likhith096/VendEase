@@ -3,7 +3,7 @@ import 'package:vendeaze/core/app_export.dart';
 
 // ignore: must_be_immutable
 class ProductlistsectionItemWidget extends StatelessWidget {
-  const ProductlistsectionItemWidget({Key? key})
+  const ProductlistsectionItemWidget({Key? key, required String productPrice})
       : super(
           key: key,
         );
