@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
-import '../carts_page/widgets/productlist_item_widget.dart';
+// import '../carts_page/widgets/productlist_item_widget.dart';
 // import '../carts_page/widgets/productlistsection_item_widget.dart';
 
 class ProductlistsectionItemWidget extends StatelessWidget {
@@ -28,25 +28,6 @@ class ProductlistsectionItemWidget extends StatelessWidget {
         decoration: AppDecoration.fillPrimary,
         child: Column(
           children: [
-            CustomImageView(
-              imagePath: ImageConstant.imgRectangle81,
-              height: 55.v,
-              width: 390.h,
-            ),
-            SizedBox(height: 37.v),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                height: 22.v,
-                width: 213.h,
-                margin: EdgeInsets.only(left: 10.h),
-                child: Text(
-                  "Selected Products",
-                  style: CustomTextStyles.bodyLargeKronaOne,
-                ),
-              ),
-            ),
-            SizedBox(height: 16.v), // Add some space before the list tile
             ListTile(
               title: Text(productName),
               subtitle: Text('Price: $productPrice, Quantity: $quantity'),
@@ -75,39 +56,37 @@ class CartsPage extends StatelessWidget {
   }
 
   Widget _buildProceedToPaySection(BuildContext context, double totalPrice) {
-    return SizedBox(
-  width: double.maxFinite,
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        height: 58.v,
-        width: 150.h, // Increased width from 101.h to 150.h
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.h, // Adjusted horizontal padding for better visibility
-          vertical: 4.v,
-        ),
-        decoration: AppDecoration.outlineOnError2,
-        child: Text(
-          "Bill: ₹${totalPrice.toStringAsFixed(2)}",
-          style: theme.textTheme.headlineMedium,
-        ),
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0), // Reduce padding if necessary
+    child: SizedBox(
+      width: double.maxFinite,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible( // Make the container flexible to avoid overflow
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: AppDecoration.outlineOnError2,
+              child: Text(
+                "Bill: ₹${totalPrice.toStringAsFixed(2)}",
+                style: theme.textTheme.headlineMedium,
+                overflow: TextOverflow.ellipsis, // Prevent text overflow
+              ),
+            ),
+          ),
+          SizedBox(width: 10), // Add space between elements
+          Expanded( // Use Expanded for the button to fill the remaining space
+            child: CustomElevatedButton(
+              text: "Proceed to Pay",
+              onPressed: () => onTapPtoP(context),
+            ),
+          ),
+        ],
       ),
-      Expanded(
-        child: CustomElevatedButton(
-          height: 58.v,
-          text: "Proceed to Pay",
-          buttonStyle: CustomButtonStyles.outlineOnError,
-          buttonTextStyle: CustomTextStyles.headlineMedium28,
-          onPressed: () {
-            onTapPtoP(context);
-          },
-        ),
-      ),
-    ],
-  ),
-);
-  }
+    ),
+  );
+}
+
 
   void onTapPtoP(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.paymentScreen);
@@ -194,63 +173,6 @@ Widget _buildProductListSection(BuildContext context) {
 }
 
 
-
-
-  /// Section Widget
-  Widget _buildTopPicksSection(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 26.v,
-            width: 79.h,
-            margin: EdgeInsets.only(left: 5.h),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Top Picks",
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Top Picks",
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 24.v),
-          SizedBox(
-            height: 216.v,
-            child: ListView.separated(
-              padding: EdgeInsets.only(left: 1.h),
-              scrollDirection: Axis.horizontal,
-              separatorBuilder: (
-                context,
-                index,
-              ) {
-                return SizedBox(
-                  width: 29.h,
-                );
-              },
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return ProductlistItemWidget();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
   // void onTapPtoP(BuildContext context) {
   // Navigator.pushNamed(context, AppRoutes.paymentScreen);
   // }
