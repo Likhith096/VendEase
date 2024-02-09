@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
 
 class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged});
+  CustomBottomBar({this.onChanged, this.currentPage});
 
   final Function(BottomBarEnum)? onChanged;
+  final BottomBarEnum? currentPage; // Add this line
 
   @override
   CustomBottomBarState createState() => CustomBottomBarState();
 }
-
 class CustomBottomBarState extends State<CustomBottomBar> {
   int selectedIndex = 0;
 
@@ -30,6 +30,15 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.User,
     )
   ];
+  
+@override
+void initState() {
+  super.initState();
+  if (widget.currentPage != null) {
+    selectedIndex = bottomMenuList.indexWhere((item) => item.type == widget.currentPage);
+    if (selectedIndex == -1) selectedIndex = 0; // Fallback to default if not found
+  }
+}
 
   @override
 Widget build(BuildContext context) {
