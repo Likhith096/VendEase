@@ -12,7 +12,13 @@ class HomeScreen extends StatelessWidget {
   final PageController pageController = PageController(viewportFraction: 0.8);
  @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return WillPopScope(
+      onWillPop: () async {
+        // This prevents the back button from doing anything
+        // Return false to do nothing when back button is pressed
+        return false;
+      },
+      child: SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -34,6 +40,7 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.h),
           child: _buildBottomBar(context),
         ),
+      ),
       ),
     );
   }

@@ -53,12 +53,22 @@ Future<void> createAccount() async {
   String password = passwordFieldController.text.trim();
   String name = nameFieldController.text.trim();
 
+  // Regular expression for validating email
+  RegExp emailRegExp = RegExp(
+    r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+  );
+
+  // Regular expression for validating password
+  RegExp passwordRegExp = RegExp(
+    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$',
+  );
+
   if (name.isEmpty) {
     log("Please fill in the name");
-  } else if (email.isEmpty) {
-    log("Please fill in the email ID");
-  } else if (password.isEmpty) {
-    log("Please fill in the password");
+  } else if (email.isEmpty || !emailRegExp.hasMatch(email)) {
+    log("Please enter a valid email ID");
+  } else if (password.isEmpty || !passwordRegExp.hasMatch(password)) {
+    log("Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character");
   } else {
     try {
       // Removed the unused variable 'userCredential'
