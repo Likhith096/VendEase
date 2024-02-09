@@ -15,6 +15,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _phoneNumber = ''; // Variable for phone number
   String _email = '';       // Variable for email
 
+   Future<void> onTapLogout(BuildContext context) async {
+    try {
+      // Sign out from Firebase Auth
+      await FirebaseAuth.instance.signOut();
+      // Navigate to LoginSignupScreen and clear all previous routes
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.loginSignupScreen, (Route<dynamic> route) => false);
+    } catch (e) {
+      print("Error logging out: $e");
+      // Handle any errors that occur during logout
+    }
+  }
 
   @override
   void initState() {
@@ -61,8 +72,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // _phoneNumber = await BackendService.fetchPhoneNumber();
     // _email = await BackendService.fetchEmail();
     setState(() {
-      _phoneNumber = '123-456-7890'; // Example phone number
-      _email = 'info@example.com';   // Example email
+      _phoneNumber = '9876234521'; // Example phone number
+      _email = 'vendeaze.com';   // Example email
     });
   }
 
@@ -117,24 +128,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileSection(BuildContext context) {
-    return Column(
-      children: [
-        // Container(
-        //   width: double.maxFinite,
-        //   padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 1.v),
-        //   decoration: AppDecoration.fillPrimary.copyWith(
-        //     borderRadius: BorderRadiusStyle.roundedBorder10,
-        //   ),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       SizedBox(height: 22.v),
-        //       Text("My Orders", style: theme.textTheme.headlineLarge),
-        //     ],
-        //   ),
-        // ),
-        SizedBox(height: 18.v),
-        Container(
+  return Column(
+    children: [
+      SizedBox(height: 18.v),
+      GestureDetector(
+        onTap: () {
+          showAboutDialog(context);
+        },
+        child: Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 9.v),
           decoration: AppDecoration.fillPrimary.copyWith(
@@ -148,39 +149,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        SizedBox(height: 17.v),
-        _buildContactUsSection(),
-        // Container(
-        //   width: double.maxFinite,
-        //   padding: EdgeInsets.symmetric(horizontal: 13.h, vertical: 12.v),
-        //   decoration: AppDecoration.fillPrimary.copyWith(
-        //     borderRadius: BorderRadiusStyle.roundedBorder10,
-        //   ),
-        //   child: Text("Contact Us", style: theme.textTheme.headlineLarge),
-        // ),
-        SizedBox(height: 16.v),
-        GestureDetector(
-          onTap: () {
-            onTapLogout(context);
-          },
-          child: Container(
-            width: double.maxFinite,
-            padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 8.v),
-            decoration: AppDecoration.fillPrimary.copyWith(
-              borderRadius: BorderRadiusStyle.roundedBorder10,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 8.v),
-                Text("Logout", style: theme.textTheme.headlineLarge),
-              ],
-            ),
+      ),
+      SizedBox(height: 17.v),
+      _buildContactUsSection(),
+      SizedBox(height: 16.v),
+      GestureDetector(
+        onTap: () {
+          onTapLogout(context);
+        },
+        child: Container(
+          width: double.maxFinite,
+          padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 8.v),
+          decoration: AppDecoration.fillPrimary.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 8.v),
+              Text("Logout", style: theme.textTheme.headlineLarge),
+            ],
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
+void showAboutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("About Vendeaze"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(
+                "Vendeaze is your go-to marketplace for everything fresh and local. "
+                "From groceries to homemade delicacies, we connect you with local vendors "
+                "to bring the best of the community straight to your doorstep. "
+                "With an easy-to-use app, secure payments, and fast delivery, "
+                "Vendeaze is dedicated to making shopping convenient, sustainable, and community-oriented. "
+                "Join us on a journey to rediscover the joy of local produce and support local businesses with Vendeaze.",
+                textAlign: TextAlign.justify,
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
    Widget _buildContactUsSection() {
     return GestureDetector(
@@ -190,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Contact Us"),
+              title: Text("Contact us"),
               content: Text("Phone: $_phoneNumber\nEmail: $_email"),
               actions: [
                 TextButton(
@@ -222,7 +251,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   /// Navigates to the loginSignupScreen when the action is triggered.
-  onTapLogout(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.loginSignupScreen);
-  }
 }

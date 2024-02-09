@@ -25,13 +25,23 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    if(email == "")
+    // Regular expression for validating email
+    RegExp emailRegExp = RegExp(
+      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+    );
+
+    // Regular expression for validating password
+    RegExp passwordRegExp = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$',
+    );
+
+    if(email.isEmpty || !emailRegExp.hasMatch(email))
     {
-      log("Please Fill the email ID");
+      log("Please fill a valid email ID");
     }
-    else if(password == "")
+    else if(password.isEmpty || !passwordRegExp.hasMatch(password))
     {
-      log("Please Fill the password");
+      log("Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character");
     }
     else
     {
@@ -41,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           log("Login Successful");
           if(userCredential.user != null)
           {
-            Navigator.pushNamed(context, AppRoutes.homeScreen);
+             Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
           }
         } on FirebaseAuthException catch (e) {
           log("Failed to create account: ${e.message}");
