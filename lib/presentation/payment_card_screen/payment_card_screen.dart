@@ -1,5 +1,3 @@
-// import 'package:another_stepper/dto/stepper_data.dart';
-// import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/widgets/app_bar/appbar_title.dart';
@@ -9,127 +7,138 @@ import 'package:vendeaze/widgets/custom_elevated_button.dart';
 import 'package:vendeaze/widgets/custom_switch.dart';
 import 'package:vendeaze/widgets/custom_text_form_field.dart';
 
-// ignore_for_file: must_be_immutable
 class PaymentCardScreen extends StatelessWidget {
   PaymentCardScreen({Key? key}) : super(key: key);
 
   TextEditingController televisionController = TextEditingController();
-
   TextEditingController nameController = TextEditingController();
-
   bool isSelectedSwitch = false;
-
   bool isSelectedSwitch1 = false;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-            body: SizedBox(
-                width: SizeUtils.width,
-                child: SingleChildScrollView(
-                    padding: EdgeInsets.only(top: 28.v),
-                    child: Container(
-                        margin: EdgeInsets.only(left: 14.h, right: 24.h),
-                        decoration: AppDecoration.outlinePrimary.copyWith(
-                            borderRadius: BorderRadiusStyle.roundedBorder34),
-                        child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              //_buildStepper(context),
-                              SizedBox(height: 57.v),
-                              _buildTelevisionColumn(context),
-                              SizedBox(height: 23.v),
-                              _buildNameColumn(context),
-                              SizedBox(height: 23.v),
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(left: 30.h),
-                                      child: Text("Cardnumber",
-                                          style: theme.textTheme.bodySmall))),
-                              SizedBox(height: 7.v),
-                              Container(
-                                  height: 38.v,
-                                  width: 304.h,
-                                  margin: EdgeInsets.only(right: 5.h),
-                                  padding: EdgeInsets.all(13.h),
-                                  decoration: AppDecoration
-                                      .outlinePrimaryContainer2
-                                      .copyWith(
-                                          borderRadius:
-                                              BorderRadiusStyle.roundedBorder6),
-                                  child: CustomImageView(
-                                      imagePath: ImageConstant.imgTelevision,
-                                      height: 11.v,
-                                      width: 16.h,
-                                      alignment: Alignment.topLeft)),
-                              SizedBox(height: 23.v),
-                              Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 30.h, right: 5.h),
-                                  child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        _buildExpiryColumn(context),
-                                        _buildCvvColumn(context)
-                                      ])),
-                              SizedBox(height: 41.v),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CustomSwitch(
-                                            value: isSelectedSwitch,
-                                            onChange: (value) {
-                                              isSelectedSwitch = value;
-                                            }),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 9.h),
-                                            child: Text("Remember this card",
-                                                style:
-                                                    theme.textTheme.bodySmall))
-                                      ])),
-                              SizedBox(height: 24.v),
-                              Padding(
-                                  padding: EdgeInsets.only(right: 63.h),
-                                  child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        CustomSwitch(
-                                            value: isSelectedSwitch1,
-                                            onChange: (value) {
-                                              isSelectedSwitch1 = value;
-                                            }),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 9.h),
-                                            child: Text(
-                                                "Send receipt to my email",
-                                                style:
-                                                    theme.textTheme.bodySmall))
-                                      ])),
-                              SizedBox(height: 42.v),
-                              Align(
-                                  alignment: Alignment.center,
-                                  child:
-                                      Divider(indent: 44.h, endIndent: 33.h)),
-                              SizedBox(height: 24.v),
-                              _buildAmountPayableRow(context),
-                              SizedBox(height: 24.v),
-                              CustomElevatedButton(
-                                  text: "Pay Now",
-                                  margin:
-                                      EdgeInsets.only(left: 30.h, right: 5.h),
-                                  onPressed: (){
-                                    ontap(context);
-                                  })
-                            ]))))));
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _buildAppBar(context),
+        body: SizedBox(
+          width: SizeUtils.width,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 28.v),
+            child: Container(
+              decoration: AppDecoration.outlinePrimary.copyWith(
+                borderRadius: BorderRadiusStyle.roundedBorder34,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 57.v),
+                  _buildTelevisionColumn(context),
+                  SizedBox(height: 23.v),
+                  _buildNameColumn(context),
+                  SizedBox(height: 23.v),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 30.h),
+                      child: Text("Cardnumber", style: theme.textTheme.bodySmall),
+                    ),
+                  ),
+                  SizedBox(height: 7.v),
+                  Container(
+                    height: 38.v,
+                    margin: EdgeInsets.only(right: 5.h),
+                    padding: EdgeInsets.all(13.h),
+                    decoration: AppDecoration.outlinePrimaryContainer2.copyWith(
+                      borderRadius: BorderRadiusStyle.roundedBorder6,
+                    ),
+                    child: CustomImageView(
+                      imagePath: ImageConstant.imgTelevision,
+                      height: 11.v,
+                      width: 16.h,
+                      alignment: Alignment.topLeft,
+                    ),
+                  ),
+                  SizedBox(height: 23.v),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30.h, right: 5.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _buildExpiryColumn(context),
+                        _buildCvvColumn(context),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 41.v),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomSwitch(
+                          value: isSelectedSwitch,
+                          onChange: (value) {
+                            isSelectedSwitch = value;
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 9.h),
+                          child: Text(
+                            "Remember this card",
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 24.v),
+                  Padding(
+                    padding: EdgeInsets.only(right: 63.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomSwitch(
+                          value: isSelectedSwitch1,
+                          onChange: (value) {
+                            isSelectedSwitch1 = value;
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 9.h),
+                          child: Text(
+                            "Send receipt to my email",
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 42.v),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Divider(indent: 44.h, endIndent: 33.h),
+                  ),
+                  SizedBox(height: 24.v),
+                  _buildAmountPayableRow(context),
+                  SizedBox(height: 24.v),
+                  CustomElevatedButton(
+                    text: "Pay Now",
+                    margin: EdgeInsets.only(left: 30.h, right: 5.h),
+                    onPressed: () {
+                      ontap(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
+
 
   void ontap(BuildContext context)
   {
@@ -157,68 +166,35 @@ class PaymentCardScreen extends StatelessWidget {
             ])));
   }
 
-  /// Section Widget
-  // Widget _buildStepper(BuildContext context) {
-  //   return AnotherStepper(
-  //       stepperDirection: Axis.horizontal,
-  //       activeIndex: 0,
-  //       inverted: true,
-  //       stepperList: [
-  //         StepperData(),
-  //         StepperData(
-  //             iconWidget: SizedBox(
-  //                 height: 25.v,
-  //                 width: 307.h,
-  //                 child: Stack(alignment: Alignment.center, children: [
-  //                   CustomImageView(
-  //                       imagePath: ImageConstant.imgLine1,
-  //                       height: 2.v,
-  //                       width: 154.h,
-  //                       alignment: Alignment.topLeft,
-  //                       margin: EdgeInsets.only(top: 10.v)),
-  //                   Align(
-  //                       alignment: Alignment.center,
-  //                       child: Container(
-  //                           height: 25.adaptSize,
-  //                           width: 25.adaptSize,
-  //                           padding: EdgeInsets.all(7.h),
-  //                           decoration: AppDecoration.fillPrimary.copyWith(
-  //                               borderRadius: BorderRadiusStyle.circleBorder12),
-  //                           child: CustomImageView(
-  //                               imagePath: ImageConstant.imgCheckmark,
-  //                               height: 8.v,
-  //                               width: 11.h,
-  //                               alignment: Alignment.bottomCenter))),
-  //                   CustomImageView(
-  //                       imagePath: ImageConstant.imgLine2,
-  //                       height: 1.v,
-  //                       width: 152.h,
-  //                       alignment: Alignment.topRight,
-  //                       margin: EdgeInsets.only(top: 9.v))
-  //                 ]))),
-  //         StepperData()
-  //       ]);
-  // }
+
 
   /// Section Widget
-  Widget _buildTelevisionColumn(BuildContext context) {
+   Widget _buildTelevisionColumn(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 30.h, right: 5.h),
-        decoration: AppDecoration.outlinePrimaryContainer1,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      margin: EdgeInsets.only(left: 30.h, right: 5.h),
+      decoration: AppDecoration.outlinePrimaryContainer1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
           Text("Payment Method", style: theme.textTheme.bodySmall),
           SizedBox(height: 5.v),
           CustomTextFormField(
-              controller: televisionController,
-              prefix: Container(
-                  margin: EdgeInsets.fromLTRB(13.h, 13.v, 30.h, 13.v),
-                  child: CustomImageView(
-                      imagePath: ImageConstant.imgTelevision,
-                      height: 11.v,
-                      width: 16.h)),
-              prefixConstraints: BoxConstraints(maxHeight: 38.v))
-        ]));
+            controller: televisionController,
+            prefix: Container(
+              margin: EdgeInsets.fromLTRB(13.h, 13.v, 30.h, 13.v),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgTelevision,
+                height: 11.v,
+                width: 16.h,
+              ),
+            ),
+            prefixConstraints: BoxConstraints(maxHeight: 38.v),
+          ),
+        ],
+      ),
+    );
   }
+
 
   /// Section Widget
   Widget _buildNameColumn(BuildContext context) {
@@ -256,7 +232,7 @@ class PaymentCardScreen extends StatelessWidget {
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
                 height: 38.v,
-                width: 141.h,
+                width: 88.h,
                 padding: EdgeInsets.all(13.h),
                 decoration: AppDecoration.outlinePrimaryContainer2
                     .copyWith(borderRadius: BorderRadiusStyle.roundedBorder6),
@@ -285,7 +261,7 @@ class PaymentCardScreen extends StatelessWidget {
               Text("CVV", style: theme.textTheme.bodySmall),
               SizedBox(height: 7.v),
               Container(
-                  width: 141.h,
+                  width: 88.h,
                   padding:
                       EdgeInsets.symmetric(horizontal: 48.h, vertical: 9.v),
                   decoration: AppDecoration.outlinePrimaryContainer2

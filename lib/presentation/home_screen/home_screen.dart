@@ -3,10 +3,16 @@ import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/presentation/carts_page/carts_page.dart';
 import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 import '../products_page_screen/products_page_screen.dart';
-//import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   final PageController pageController = PageController(viewportFraction: 0.8);
@@ -100,49 +106,71 @@ Widget _buildFacts(BuildContext context) {
 
   /// Section Widget
 Widget _buildLocationRow(BuildContext context) {
-    return SizedBox(
-      height: 100.v,
-      width: 389.h,
-      child: Stack(
-        alignment: Alignment.centerRight,
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 7.h,
-                vertical: 34.v,
-              ),
-              decoration: AppDecoration.fillPink.copyWith(
+  return FutureBuilder<String>(
+    future: getCurrentLocation(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // Correctly wrap the CircularProgressIndicator
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        // Proper error handling
+        return Text('Error: ${snapshot.error}');
+      } else {
+        // Display the location
+        final location = snapshot.data;
+        final shortLocation = shortenLocation(location!); // Corrected null safety
+        return SizedBox(
+          // Correct dimensions and ensure your responsive design methods work
+          height: 100, // Example size, adjust as needed
+          width: 389, // Example size, adjust as needed
+          child: Stack(
+            alignment: Alignment.centerRight,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 7, vertical: 34),
+                  // Ensure your decoration is correctly defined
+                  decoration: AppDecoration.fillPink.copyWith(
                 borderRadius: BorderRadiusStyle.roundedBorder40,
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgMdiLocation,
-                    height: 24.adaptSize,
-                    width: 24.adaptSize,
-                    margin: EdgeInsets.only(top: 6.v),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Ensure CustomImageView or equivalent is correctly implemented
+                      Icon(Icons.location_on), // Example replacement
+                      Text(
+                        shortLocation,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ],
                   ),
-                  Text(
-                    "Location",
-                    style: Theme.of(context).textTheme.headlineSmall, // Adjusted this line
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          CustomImageView(
+              // Ensure CustomImageView or equivalent is correctly implemented
+            CustomImageView(
             imagePath: ImageConstant.imgVendeaselogoRemovebgPreview164x255,
             height: 80.v,
             width: 136.h,
             alignment: Alignment.centerRight,
           ),
-        ],
-      ),
-    );
+            ],
+          ),
+        );
+      }
+    },
+  );
 }
+
+
+String shortenLocation(String location) {
+  final parts = location.split(',');
+  if (parts.length >= 2) {
+    return '${parts[0]}, ${parts[1]}';
+  }
+  return location;
+}
+
 
 
   /// Section Widget
@@ -195,10 +223,38 @@ Widget _buildCategoriesRow(BuildContext context) {
 /// Section Widget
 Widget _buildBottomBar(BuildContext context) {
   return CustomBottomBar(
+    currentPage: BottomBarEnum.Heroiconssolidhome, // Example for the home page
     onChanged: (BottomBarEnum type) {
       // This callback can be used to update the state of HomeScreen if needed.
     },
   );
+}
+
+
+Future<String> getCurrentLocation() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return "Location service disabled";
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission != LocationPermission.whileInUse &&
+        permission != LocationPermission.always) {
+      return "Location permission denied";
+    }
+  }
+
+  try {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return "${position.latitude}, ${position.longitude}";
+  } catch (e) {
+    return "Error getting location: $e";
+  }
 }
 
 
@@ -211,32 +267,5 @@ Widget getCurrentPage(String currentRoute) {
       return HomeScreen();
   }
 }
-
-// Future<String> getCurrentLocation() async {
-//   Location location = new Location();
-
-//   bool _serviceEnabled;
-//   PermissionStatus _permissionGranted;
-//   LocationData _locationData;
-
-//   _serviceEnabled = await location.serviceEnabled();
-//   if (!_serviceEnabled) {
-//     _serviceEnabled = await location.requestService();
-//     if (!_serviceEnabled) {
-//       return "Location service disabled";
-//     }
-//   }
-
-//   _permissionGranted = await location.hasPermission();
-//   if (_permissionGranted == PermissionStatus.denied) {
-//     _permissionGranted = await location.requestPermission();
-//     if (_permissionGranted != PermissionStatus.granted) {
-//       return "Location permission denied";
-//     }
-//   }
-
-//   _locationData = await location.getLocation();
-//   return "${_locationData.latitude}, ${_locationData.longitude}";
-// }
 
 }
