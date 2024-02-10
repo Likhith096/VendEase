@@ -1,13 +1,67 @@
-// import 'package:another_stepper/dto/stepper_data.dart';
-// import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/widgets/custom_elevated_button.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-
-class PaymentScreen extends StatelessWidget {
+class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
 
+  @override
+  _PaymentScreenState createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+
+Razorpay? _razorpay;
+
+  void _handlePaymentSuccess(PaymentSuccessResponse res)
+  {
+    Fluttertoast.showToast(  msg: "Payment Successful!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.green ,
+        textColor: Colors.white,
+        fontSize: 16.0,);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse res)
+  {
+      Fluttertoast.showToast(  msg: "Payment Failure!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.red ,
+        textColor: Colors.white,
+        fontSize: 16.0,);
+  }
+
+  void makePayment() async{
+    var options = {
+      'key' : 'rzp_test_gPBGCagUrvEgTY',
+      'amount' : 1000, //In Paisa
+      'name' : "Likhith",
+      'description' : "Chips",
+      'prefill' : {'contact': "8660486877" , 'email' : "likhith.cs21@bmsce.ac.in"},
+    };
+
+  try{
+    _razorpay?.open(options);
+  }
+  catch(e){
+    debugPrint(e.toString());
+  }
+  }
+
+  @override
+  void initState()
+  {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR , _handlePaymentError);
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,17 +104,11 @@ class PaymentScreen extends StatelessWidget {
                       child: _buildDeliveryTime(context,
                           deliveryTimeText: "Total Price", timeText: " 34")),
                   SizedBox(height: 6.v),
-                  Padding(
-                      padding: EdgeInsets.only(left: 3.h, right: 13.h),
-                      child: _buildDeliveryTime(context,
-                          deliveryTimeText: "Delivery Time",
-                          timeText: "27mins")),
-                  SizedBox(height: 24.v),
                   CustomElevatedButton(
                       text: "Pay Now",
                       margin: EdgeInsets.only(left: 18.h, right: 19.h),
                       onPressed: (){
-                        ontap(context);
+                        makePayment();
                       }),
                   SizedBox(height: 51.v)
                 ]))));
@@ -70,50 +118,6 @@ void ontap(BuildContext context)
 {
   Navigator.pushNamed(context,AppRoutes.paymentCardScreen);
 }
-  // Widget _buildStepper(BuildContext context) {
-  //   return CustomStepper(
-  //     activeIndex: 0, // Set the active index as needed
-  //     stepperList: ["Step 1", "Step 2", "Step 3"], // Customize the steps
-  //   );
-  // }  /// Section Widget
-  // Widget _buildStepper(BuildContext context) {
-  //   return AnotherStepper(
-  //       iconHeight: 23,
-  //       iconWidth: 318,
-  //       stepperDirection: Axis.horizontal,
-  //       activeIndex: 0,
-  //       barThickness: 3,
-  //       inverted: true,
-  //       stepperList: [
-  //         StepperData(
-  //             iconWidget: SizedBox(
-  //                 height: 23.v,
-  //                 width: 318.h,
-  //                 child: Stack(alignment: Alignment.center, children: [
-  //                   Align(
-  //                       alignment: Alignment.centerLeft,
-  //                       child: Container(
-  //                           height: 23.v,
-  //                           width: 25.h,
-  //                           padding: EdgeInsets.all(7.h),
-  //                           decoration: AppDecoration.fillPrimary.copyWith(
-  //                               borderRadius: BorderRadiusStyle.circleBorder12),
-  //                           child: CustomImageView(
-  //                               imagePath: ImageConstant.imgCheckmark,
-  //                               height: 8.v,
-  //                               width: 11.h,
-  //                               alignment: Alignment.topCenter))),
-  //                   CustomImageView(
-  //                       imagePath: ImageConstant.imgGroup8,
-  //                       height: 1.v,
-  //                       width: 311.h,
-  //                       alignment: Alignment.center)
-  //                 ]))),
-  //         StepperData(),
-  //         StepperData()
-  //       ]);
-  // }
-
   /// Section Widget
   Widget _buildSummary(BuildContext context) {
     return Container(
