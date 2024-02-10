@@ -74,24 +74,18 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
 void addProduct(String productId) async {
   print('Adding product: $productId');
 
-  // Find the product in the list
   Product? productDetail = products.firstWhere(
     (p) => p.id == productId,
-    orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0, imageURL: ''), // Add default imageURL here
+    orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0, imageURL: ''),
   );
 
-  // Check if productDetail is a valid product
   if (productDetail.id.isEmpty) {
     print('Product not found in the list');
     return;
   }
 
   setState(() {
-    if (productQuantities.containsKey(productId)) {
-      productQuantities[productId] = productQuantities[productId]! + 1;
-    } else {
-      productQuantities[productId] = 1;
-    }
+    productQuantities[productId] = (productQuantities[productId] ?? 0) + 1;
   });
 
   String userId = getCurrentUserId();
@@ -101,35 +95,49 @@ void addProduct(String productId) async {
   }
 
   DocumentReference cartRef = FirebaseFirestore.instance.collection('carts').doc(productId);
+  DocumentReference orderRef = FirebaseFirestore.instance.collection('Orders').doc(productId); // Reference to Orders collection
 
   FirebaseFirestore.instance.runTransaction((transaction) async {
     try {
       DocumentSnapshot cartSnapshot = await transaction.get(cartRef);
-      if (!cartSnapshot.exists) {
-        print('Creating new cart item');
+      DocumentSnapshot orderSnapshot = await transaction.get(orderRef); // Get the current order snapshot
+
+      int newQuantity = 1;
+      if (cartSnapshot.exists) {
+        newQuantity = cartSnapshot['quantity'] + 1;
+        transaction.update(cartRef, {'quantity': newQuantity});
+      } else {
         transaction.set(cartRef, {
           'productId': productId,
           'userId': userId,
-          'quantity': 1,
+          'quantity': newQuantity,
           'price': productDetail.price,
           'name': productDetail.name,
-          'imageURL': productDetail.imageURL, // Include imageURL here
+          'imageURL': productDetail.imageURL,
           'timestamp': FieldValue.serverTimestamp(),
         });
+      }
+
+      // Update or set in the Orders collection similarly
+      if (orderSnapshot.exists) {
+        transaction.update(orderRef, {'quantity': newQuantity});
       } else {
-        int currentQuantity = cartSnapshot['quantity'];
-        print('Updating cart item quantity to ${currentQuantity + 1}');
-        // Consider also updating the imageURL if necessary here
-        transaction.update(cartRef, {
-          'quantity': currentQuantity + 1,
-          // 'imageURL': productDetail.imageURL, // Uncomment if you wish to update imageURL as well
+        transaction.set(orderRef, {
+          'productId': productId,
+          'userId': userId,
+          'quantity': newQuantity,
+          'price': productDetail.price,
+          'name': productDetail.name,
+          'imageURL': productDetail.imageURL,
+          'timestamp': FieldValue.serverTimestamp(),
         });
       }
     } catch (e) {
-      print('Error updating cart: $e');
+      print('Error updating cart and orders: $e');
     }
   });
 }
+
 
 
   void removeProduct(String productId) async {
@@ -142,19 +150,24 @@ void addProduct(String productId) async {
     productQuantities[productId] = productQuantities[productId]! - 1;
   });
 
-  // Update Firestore
   DocumentReference cartRef = FirebaseFirestore.instance.collection('carts').doc(productId);
+  DocumentReference orderRef = FirebaseFirestore.instance.collection('Orders').doc(productId); // Reference to Orders collection
+
   FirebaseFirestore.instance.runTransaction((transaction) async {
     DocumentSnapshot cartSnapshot = await transaction.get(cartRef);
+    DocumentSnapshot orderSnapshot = await transaction.get(orderRef); // Get the current order snapshot
+
     if (cartSnapshot.exists && cartSnapshot['quantity'] > 1) {
-      int currentQuantity = cartSnapshot['quantity'];
-      transaction.update(cartRef, {'quantity': currentQuantity - 1});
+      int newQuantity = cartSnapshot['quantity'] - 1;
+      transaction.update(cartRef, {'quantity': newQuantity});
+      transaction.update(orderRef, {'quantity': newQuantity}); // Update Orders collection
     } else {
-      // If quantity becomes 0, consider removing the item from the cart
       transaction.delete(cartRef);
+      transaction.delete(orderRef); // Remove from Orders collection if quantity becomes 0
     }
   });
 }
+
 
 
  double calculateTotalPrice() {
