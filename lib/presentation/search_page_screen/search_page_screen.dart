@@ -107,6 +107,7 @@ class SearchPageScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(
+      currentPage: BottomBarEnum.Search,
       onChanged: (BottomBarEnum type) {
         Navigator.pushNamed(
             navigatorKey.currentContext!, getCurrentRoute(type));

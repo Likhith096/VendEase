@@ -109,6 +109,25 @@ Widget _buildFacts(BuildContext context) {
     );
   }
 
+   void _showLocationDialog(BuildContext context, String location) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Location Coordinates'),
+          content: Text(location),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   /// Section Widget
@@ -125,7 +144,6 @@ Widget _buildLocationRow(BuildContext context) {
       } else {
         // Display the location
         final location = snapshot.data;
-        final shortLocation = shortenLocation(location!); // Corrected null safety
         return SizedBox(
           // Correct dimensions and ensure your responsive design methods work
           height: 100, // Example size, adjust as needed
@@ -144,12 +162,15 @@ Widget _buildLocationRow(BuildContext context) {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Ensure CustomImageView or equivalent is correctly implemented
-                      Icon(Icons.location_on), // Example replacement
-                      Text(
-                        shortLocation,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
+                      // Ensure CustomImageView or equivalent is correctly implemented// Example replacement
+                         Icon(Icons.location_on , size:40), 
+                        GestureDetector(
+                          onTap: () => _showLocationDialog(context, location!),
+                          child: Text(
+                            'Location',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -168,17 +189,6 @@ Widget _buildLocationRow(BuildContext context) {
     },
   );
 }
-
-
-String shortenLocation(String location) {
-  final parts = location.split(',');
-  if (parts.length >= 2) {
-    return '${parts[0]}, ${parts[1]}';
-  }
-  return location;
-}
-
-
 
   /// Section Widget
 Widget _buildCategoriesRow(BuildContext context) {

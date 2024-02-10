@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vendeaze/presentation/orders_history/orders_history.dart';
+import 'package:vendeaze/widgets/custom_bottom_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -99,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(_userName, style: theme.textTheme.displaySmall),
-                        SizedBox(height: 101.v),
+                        SizedBox(height: 44.v),
                         _buildProfileSection(context),
                         SizedBox(height: 101.v),
                       ],
@@ -123,9 +125,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
+          bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.h),
+          child: _buildBottomBar(context),
+        ),
       ),
     );
   }
+
+  Widget _buildBottomBar(BuildContext context) {
+  return CustomBottomBar(
+    currentPage: BottomBarEnum.User, // Example for the home page
+    onChanged: (BottomBarEnum type) {
+      // This callback can be used to update the state of HomeScreen if needed.
+    },
+  );
+}
 
   Widget _buildProfileSection(BuildContext context) {
   return Column(
@@ -150,9 +165,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-      SizedBox(height: 17.v),
+      //About Ends 
+      //My Order Begins 
+         GestureDetector(
+        onTap: () {
+          // Navigate to My Orders page here
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderHistoryScreen()), //I Can Pass name here 
+          );
+        },
+        child: Container(
+          width: double.maxFinite,
+          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          decoration: AppDecoration.fillPrimary.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 8.0),
+              Text("My Orders", style: theme.textTheme.headlineLarge),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(height: 16.0),
+      //Contact us begins
       _buildContactUsSection(),
       SizedBox(height: 16.v),
+      //Logout Begins
       GestureDetector(
         onTap: () {
           onTapLogout(context);
