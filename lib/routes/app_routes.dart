@@ -13,6 +13,7 @@ import 'package:vendeaze/presentation/app_navigation_screen/app_navigation_scree
 import 'package:vendeaze/presentation/confirmed_screen/confirmed_screen.dart';
 import 'package:vendeaze/presentation/payment_card_screen/payment_card_screen.dart';
 import 'package:vendeaze/presentation/payment_screen/payment_screen.dart';
+import 'package:vendeaze/presentation/orders_history/orders_history.dart';
 class AppRoutes {
   static const String landingPageScreen = '/landing_page_screen';
 
@@ -44,6 +45,8 @@ class AppRoutes {
 
   static const String paymentCardScreen = '/payment_card_screen';
 
+  static const String orderHistoryScreen = '/orders_history';
+
   static Map<String, WidgetBuilder> routes = {
     landingPageScreen: (context) => LandingPageScreen(),
     loginSignupScreen: (context) => LoginSignupScreen(),
@@ -63,5 +66,6 @@ class AppRoutes {
     paymentScreen: (context) => PaymentScreen(),
     confirmedScreen: (context) => ConfirmedScreen(),
     paymentCardScreen: (context) => PaymentCardScreen(),
+    orderHistoryScreen: (context) => OrderHistoryScreen(),
   };
 }
