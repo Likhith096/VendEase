@@ -10,7 +10,6 @@ import 'package:vendeaze/presentation/carts_page_container_screen/carts_page_con
 import 'package:vendeaze/presentation/home_screen/home_screen.dart';
 import 'package:vendeaze/presentation/profile_screen/profile_screen.dart';
 import 'package:vendeaze/presentation/app_navigation_screen/app_navigation_screen.dart';
-import 'package:vendeaze/presentation/confirmed_screen/confirmed_screen.dart';
 import 'package:vendeaze/presentation/payment_card_screen/payment_card_screen.dart';
 import 'package:vendeaze/presentation/payment_screen/payment_screen.dart';
 import 'package:vendeaze/presentation/orders_history/orders_history.dart';
@@ -64,7 +63,6 @@ class AppRoutes {
     profileScreen: (context) => ProfileScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     paymentScreen: (context) => PaymentScreen(),
-    confirmedScreen: (context) => ConfirmedScreen(),
     paymentCardScreen: (context) => PaymentCardScreen(),
     orderHistoryScreen: (context) => OrderHistoryScreen(),
   };
