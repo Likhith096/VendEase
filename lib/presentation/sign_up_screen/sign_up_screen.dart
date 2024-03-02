@@ -5,6 +5,7 @@ import 'package:vendeaze/core/app_export.dart'; // Ensure this import is correct
 import 'package:vendeaze/widgets/custom_elevated_button.dart'; // Ensure this import is correct
 import 'package:vendeaze/widgets/custom_text_form_field.dart'; // Ensure this import is correct
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // ignore_for_file: must_be_immutable
@@ -63,13 +64,29 @@ Future<void> createAccount() async {
     r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$',
   );
 
-  if (name.isEmpty) {
-    log("Please fill in the name");
-  } else if (email.isEmpty || !emailRegExp.hasMatch(email)) {
-    log("Please enter a valid email ID");
-  } else if (password.isEmpty || !passwordRegExp.hasMatch(password)) {
-    log("Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character");
-  } else {
+ if (name.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Please fill in the name",
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } else if (email.isEmpty || !emailRegExp.hasMatch(email)) {
+      Fluttertoast.showToast(
+        msg: "Please enter a valid email ID",
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } else if (password.isEmpty || !passwordRegExp.hasMatch(password)) {
+      Fluttertoast.showToast(
+        msg: "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character",
+        backgroundColor: Colors.red,
+        gravity: ToastGravity.CENTER,
+        textColor: Colors.white,
+      );
+    }
+    else {
     try {
       // Removed the unused variable 'userCredential'
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
@@ -81,6 +98,12 @@ Future<void> createAccount() async {
           'email': email,
           'password':password,
         });
+        Fluttertoast.showToast(
+            msg: "Account created successfully",
+            backgroundColor: Colors.green,
+            gravity: ToastGravity.TOP,
+            textColor: Colors.white,
+          );
 
         Navigator.pushNamed(context, AppRoutes.loginScreen);
       }
@@ -92,6 +115,12 @@ Future<void> createAccount() async {
 
     } on FirebaseAuthException catch (e) {
       log("Failed to create account: ${e.message}");
+        Fluttertoast.showToast(
+          msg: "Failed to create account: ${e.message}",
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.red,
+          textColor: Colors.white
+        );
     }
   }
 }

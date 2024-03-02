@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendeaze/core/app_export.dart';
@@ -35,30 +34,46 @@ class _LoginScreenState extends State<LoginScreen> {
       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$',
     );
 
-    if(email.isEmpty || !emailRegExp.hasMatch(email))
-    {
-      log("Please fill a valid email ID");
-    }
-    else if(password.isEmpty || !passwordRegExp.hasMatch(password))
-    {
-      log("Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character");
-    }
-    else
-    {
+     if(email.isEmpty || !emailRegExp.hasMatch(email)) {
+      Fluttertoast.showToast(
+        msg: "Please fill a valid email ID",
+        gravity: ToastGravity.CENTER,
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } else if(password.isEmpty || !passwordRegExp.hasMatch(password)) {
+      Fluttertoast.showToast(
+        msg: "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character",
+        gravity: ToastGravity.CENTER,
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } else {
       try {
-          // Removed the unused variable 'userCredential'
-          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-          log("Login Successful");
-          if(userCredential.user != null)
-          {
-             Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
-          }
-        } on FirebaseAuthException catch (e) {
-          log("Failed to create account: ${e.message}");
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        Fluttertoast.showToast(
+          msg: "Login Successful",
+          gravity: ToastGravity.CENTER,
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
+        if(userCredential.user != null) {
+          Navigator.pushReplacementNamed(context, AppRoutes.homeScreen); // Make sure this route is defined in your AppRoutes
         }
+      } on FirebaseAuthException catch (e) {
+        Fluttertoast.showToast(
+          msg: "Failed to login: ${e.message}",
+          gravity: ToastGravity.CENTER,
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
     }
-   }
-
+  }
   //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 @override
@@ -109,7 +124,7 @@ Widget build(BuildContext context) {
                             padding: EdgeInsets.only(right: 12.h),
                             child: CustomTextFormField(
                               controller: emailController,
-                              hintText: "enter Email",
+                              hintText: "Enter Email",
                               textInputType: TextInputType.emailAddress,
                               focusNode: emailFocusNode,
                             ),
@@ -120,11 +135,10 @@ Widget build(BuildContext context) {
                           CustomElevatedButton(
                             width: 216.h,
                             text: "LOGIN".toUpperCase(),
-                            margin: EdgeInsets.only(left: 62.h),
+                            margin: EdgeInsets.only(left: 42.h),
                             buttonTextStyle: CustomTextStyles.headlineLargeLivvicOnErrorBold,
                             onPressed: () {
-                              login(context);
-                              //onTapLOGIN(context);
+                              login(context);                            
                             },
                           ),
                         ],
@@ -167,7 +181,7 @@ Widget build(BuildContext context) {
           CustomTextFormField(
             width: 340.h,
             controller: passwordController,
-            hintText: "enter Password",
+            hintText: "Enter Password",
             textInputAction: TextInputAction.done,
             textInputType: TextInputType.visiblePassword,
             alignment: Alignment.bottomCenter,
