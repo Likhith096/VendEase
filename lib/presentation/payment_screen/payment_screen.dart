@@ -3,10 +3,42 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vendeaze/core/app_export.dart';
 import 'package:vendeaze/widgets/custom_elevated_button.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 // This page has Razor pay APi called via constructor itself 
-// and Confirmation page.
+// and Confirmation page i.e Carts Page without Add and Remove of products.
+// This also has a Vend Button
+
+class ProductlistsectionItemWidget extends StatelessWidget {
+  final String productName;
+  final String productPrice;
+  final String quantity;
+  final String imageUrl;
+
+  const ProductlistsectionItemWidget({
+    Key? key,
+    required this.productName,
+    required this.productPrice,
+    required this.quantity,
+    required this.imageUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Widget to display each product in the cart
+    return ListTile(
+      leading: imageUrl.isNotEmpty
+          ? Image.network(imageUrl, width: 50, height: 50, fit: BoxFit.cover)
+          : Icon(Icons.image, size: 50), // Placeholder icon in case of no image URL
+      title: Text(productName),
+      subtitle: Text('Price: $productPrice, Quantity: $quantity'),
+    );
+  }
+}
+
+
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
 
@@ -69,15 +101,67 @@ Razorpay? _razorpay;
     _razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR , _handlePaymentError);
   }
+
+  double calculateTotalPrice(List<QueryDocumentSnapshot> cartItems) {
+    double totalPrice = 0.0;
+    for (var item in cartItems) {
+      final data = item.data() as Map<String, dynamic>;
+      final price = data['price'] as double;
+      final quantity = data['quantity'] as int;
+      totalPrice += price * quantity;
+    }
+    return totalPrice;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+    final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    print("Attempting to fetch cart for User ID: $userId");
     return SafeArea(
-        child: Scaffold(
-            backgroundColor: appTheme.purple50,
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 26.h, vertical: 28.v),
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
+      child: Scaffold(
+        body: FutureBuilder<QuerySnapshot>(
+          future: FirebaseFirestore.instance.collection('carts').where('userId', isEqualTo: userId).get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+              return const Text('Your cart is empty');
+            }
+              return Column(
+                children: [
+                  // Light pink header with "Cart"
+                  Container(
+                    width: double.infinity,
+                    color: Colors.pink[100], // Light pink color
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    child: Text(
+                      "Cart",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final data = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                        return ProductlistsectionItemWidget(
+                          productName: data['name'] ?? '',
+                          productPrice: data['price'].toString(),
+                          quantity: data['quantity'].toString(),
+                          imageUrl: data['imageURL'] ?? '', // Assuming imageURL fetching is correctly implemented
+                        );
+                      },
+                    ),
+                  ),
+
                     CustomElevatedButton(
                       text: "Vend",
                       margin: EdgeInsets.only(left: 18.h, right: 19.h),
@@ -85,16 +169,11 @@ Razorpay? _razorpay;
                         //
                       }),
                   SizedBox(height: 51.v),
-
-                  CustomElevatedButton(
-                      text: "View Orders",
-                      margin: EdgeInsets.only(left: 18.h, right: 19.h),
-                      onPressed: (){
-                        ontap(context);
-                      }),
-                  SizedBox(height: 51.v)
-                ]))));
-  }
+                ],
+              );
+            },
+        )));
+        }
 
 void ontap(BuildContext context)
   {
