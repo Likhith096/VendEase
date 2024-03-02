@@ -74,6 +74,7 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
       if (data != null) {
         return Product(
           id: doc.id,
+          category: data['Category'] ?? '',
           name: data['Name'] ?? '',
           price: (data['Price'] ?? 0.0).toDouble(),
           weight: (data['Weight'] ?? 0.0).toDouble(),
@@ -106,7 +107,7 @@ void addProduct(String productId) async {
 
   Product? productDetail = products.firstWhere(
     (p) => p.id == productId,
-    orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0, imageURL: ''),
+    orElse: () => Product(id: '', category: '', name: '', price: 0.0, weight: 0.0, imageURL: ''),
   );
 
   if (productDetail.id.isEmpty) {
@@ -218,7 +219,7 @@ void addProduct(String productId) async {
    double getProductPrice(String productId) {
         var product = products.firstWhere(
               (p) => p.id == productId,
-              orElse: () => Product(id: '', name: '', price: 0.0, weight: 0.0, imageURL: ''), // Add default imageURL here
+              orElse: () => Product(id: '', category:'' ,name: '', price: 0.0, weight: 0.0, imageURL: ''), // Add default imageURL here
             );
         // Debug print
         print('Product ID: $productId, Price: ${product.price}');

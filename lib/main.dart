@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'routes/app_routes.dart';
-
+import 'package:vendeaze/presentation/products_page_screen/products_page_screen.dart';
+ 
 class Sizer extends StatelessWidget {
   final Widget Function(BuildContext, Orientation, DeviceType) builder;
 
@@ -73,6 +74,15 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.landingPageScreen,
           routes: AppRoutes.routes,
+        onGenerateRoute: (RouteSettings settings) {
+    if (settings.name == AppRoutes.productsPageScreen) {
+      final args = settings.arguments as Map<String, dynamic>; // Cast to Map<String, dynamic>
+      final categoryName = args['categoryName'] as String; // Extract categoryName
+      return MaterialPageRoute(
+        builder: (context) => ProductsPageScreen(categoryName: categoryName),
+      );
+      }
+        }
         );
       },
     );
