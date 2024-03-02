@@ -12,6 +12,4 @@ class Product {
     required this.weight,
     required this.imageURL, // Add this line
   });
-
-  // Add other necessary fields and methods
 }

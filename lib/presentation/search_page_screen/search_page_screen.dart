@@ -1,141 +1,97 @@
-import '../search_page_screen/widgets/productcard1_item_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vendeaze/core/app_export.dart';
-import 'package:vendeaze/presentation/carts_page/carts_page.dart';
-import 'package:vendeaze/widgets/custom_bottom_bar.dart';
-import 'package:vendeaze/widgets/custom_search_view.dart';
+import '../search_page_screen/widgets/productcard1_item_widget.dart';
+import 'package:vendeaze/models/product_model.dart';
 
-class SearchPageScreen extends StatelessWidget {
-  SearchPageScreen({Key? key})
-      : super(
-          key: key,
-        );
+class SearchPageScreen extends StatefulWidget {
+  SearchPageScreen({Key? key}) : super(key: key);
 
+  @override
+  _SearchPageScreenState createState() => _SearchPageScreenState();
+}
+
+class _SearchPageScreenState extends State<SearchPageScreen> {
   final TextEditingController searchController = TextEditingController();
+  List<Product> searchResults = [];
 
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (searchController.text.trim().isNotEmpty) {
+      _searchProducts(searchController.text.trim());
+    } else {
+      setState(() => searchResults = []);
+    }
+  }
+
+  Future<void> _searchProducts(String query) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Products')
+        .where('Name', isGreaterThanOrEqualTo: query)
+        .where('Name', isLessThanOrEqualTo:query + '\uf8ff')
+        .get();
+
+        querySnapshot.docs.forEach((doc) {
+        print(doc.data());
+        });
+
+        print('Number of documents found: ${querySnapshot.docs.length}');
+
+    List<Product> products = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return Product(
+          id: doc.id,
+          name: data['Name'] ?? '',
+          price: (data['Price'] ?? 0.0).toDouble(),
+          weight: (data['Weight'] ?? 0.0).toDouble(),
+          imageURL: data['imageURL'] ?? '',
+      );
+    }).toList();
+
+    setState(() {
+      searchResults = products;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgRectangle65,
-                height: 55.v,
-                width: 390.h,
-              ),
-              SizedBox(height: 26.v),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.h),
-                child: CustomSearchView(
-                  controller: searchController,
-                  hintText: "Search For Products",
-                ),
-              ),
-              SizedBox(height: 32.v),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 33.h),
-                  child: Text(
-                    "Search Results",
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ),
-              ),
-              Spacer(),
-              SizedBox(height: 76.v),
-              _buildSearchPage(context),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.only(
-            left: 24.h,
-            right: 13.h,
-          ),
-          child: _buildBottomBar(context),
-        ),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildSearchPage(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(title: Text('Search Products')),
+      body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 5.h),
-            child: Text(
-              "Top Picks",
-              style: theme.textTheme.bodyLarge,
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                labelText: 'Search',
+                suffixIcon: Icon(Icons.search),
+              ),
             ),
           ),
-          SizedBox(height: 24.v),
-          SizedBox(
-            height: 216.v,
-            child: ListView.separated(
-              padding: EdgeInsets.only(left: 1.h),
-              scrollDirection: Axis.horizontal,
-              separatorBuilder: (
-                context,
-                index,
-              ) {
-                return SizedBox(
-                  width: 29.h,
-                );
-              },
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return Productcard1ItemWidget();
-              },
-            ),
+          Expanded(
+            child: searchResults.isNotEmpty
+                ? ListView.builder(
+                    itemCount: searchResults.length,
+                    itemBuilder: (context, index) {
+                      return ProductCardItemWidget(product: searchResults[index]);
+                    },
+                  )
+                : Center(child: Text('No products found')),
           ),
         ],
       ),
     );
-  }
-
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      currentPage: BottomBarEnum.Search,
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
-      },
-    );
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Heroiconssolidhome:
-        return AppRoutes.cartsPage;
-      case BottomBarEnum.Search:
-        return "/";
-      case BottomBarEnum.User:
-        return "/";
-      default:
-        return "/";
-    }
-  }
-
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.cartsPage:
-        return CartsPage();
-      default:
-        return DefaultWidget();
-    }
   }
 }
