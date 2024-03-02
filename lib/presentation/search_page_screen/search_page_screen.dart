@@ -52,6 +52,7 @@ class _SearchPageScreenState extends State<SearchPageScreen> {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       return Product(
           id: doc.id,
+          category: data['Category'] ?? '',
           name: data['Name'] ?? '',
           price: (data['Price'] ?? 0.0).toDouble(),
           weight: (data['Weight'] ?? 0.0).toDouble(),
