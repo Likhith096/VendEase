@@ -25,9 +25,39 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
 
   @override
   void initState() {
-    super.initState();
-    _productsFuture = fetchProductsFromFirestore();
+  super.initState();
+  _productsFuture = fetchProductsFromFirestore();
+   fetchCartItemsFromFirestore(); // Fetch cart items after fetching products
   }
+
+  Future<void> fetchCartItemsFromFirestore() async {
+  String userId = getCurrentUserId();
+  if (userId.isEmpty) {
+    print('User ID is empty');
+    return;
+  }
+
+  try {
+    QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+        .collection('carts')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    // Loop through each cart item and update productQuantities map
+    for (var doc in cartSnapshot.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+      String productId = data['productId'];
+      int quantity = data['quantity'];
+
+      setState(() {
+        productQuantities[productId] = quantity;
+      });
+    }
+  } catch (error) {
+    print('Error fetching cart items: $error');
+  }
+}
+
 
  Future<List<Product>> fetchProductsFromFirestore() async {
   try {
