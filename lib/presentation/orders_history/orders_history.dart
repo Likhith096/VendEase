@@ -42,7 +42,7 @@ class OrderHistoryScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: FutureBuilder<QuerySnapshot>(
-          future: FirebaseFirestore.instance.collection('Orders').where('userId', isEqualTo: userId).get(),
+          future: FirebaseFirestore.instance.collection('orderHistory').where('userId', isEqualTo: userId).get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -94,5 +94,3 @@ class OrderHistoryScreen extends StatelessWidget {
     Navigator.pushNamed(context, AppRoutes.paymentScreen);
   }
 }
-
-
