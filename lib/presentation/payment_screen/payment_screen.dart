@@ -113,6 +113,30 @@ Razorpay? _razorpay;
     return totalPrice;
   }
 
+  Future<void> vendItemsAndNavigateHome(BuildContext context, String userId) async {
+  // Fetch cart items for the user
+  final QuerySnapshot cartSnapshot = await FirebaseFirestore.instance
+      .collection('carts')
+      .where('userId', isEqualTo: userId)
+      .get();
+
+  // Add cart items to orderHistory collection
+  for (var doc in cartSnapshot.docs) {
+    await FirebaseFirestore.instance.collection('orderHistory').add({
+      ...doc.data() as Map<String, dynamic>,
+      'vendedOn': FieldValue.serverTimestamp(), // Optional: Add a timestamp for when the item was vended
+    });
+  }
+
+  // Delete cart items
+  for (var doc in cartSnapshot.docs) {
+    await FirebaseFirestore.instance.collection('carts').doc(doc.id).delete();
+  }
+
+  // Navigate to home page
+  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.homeScreen, (Route<dynamic> route) => false);
+}
+
 
 
   @override
@@ -139,7 +163,7 @@ Razorpay? _razorpay;
                     color: Colors.pink[100], // Light pink color
                     padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                     child: Text(
-                      "Cart",
+                      "Vending",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -165,9 +189,10 @@ Razorpay? _razorpay;
                     CustomElevatedButton(
                       text: "Vend",
                       margin: EdgeInsets.only(left: 18.h, right: 19.h),
-                      onPressed: (){
-                        //
-                      }),
+                      onPressed: () async {
+                        await vendItemsAndNavigateHome(context, userId);
+                      },
+                    ),
                   SizedBox(height: 51.v),
                 ],
               );
