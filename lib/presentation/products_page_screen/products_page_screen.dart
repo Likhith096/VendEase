@@ -282,38 +282,70 @@ void addProduct(String productId) async {
   }
 
 Widget _buildProductCard(BuildContext context, List<Product> products) {
-  return ListView.builder(
+  return GridView.builder(
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2, // Two items per row
+      childAspectRatio: 3 / 5, // Adjust the size ratio of the card
+      crossAxisSpacing: 10, // Space between cards horizontally
+      mainAxisSpacing: 10, // Space between cards vertically
+    ),
     itemCount: products.length,
     itemBuilder: (context, index) {
       Product product = products[index];
       int quantity = productQuantities[product.id] ?? 0;
 
       return Card(
-        child: ListTile(
-          leading: product.imageURL.isNotEmpty 
-              ? Image.network(product.imageURL, width: 50, height: 50, fit: BoxFit.cover)
-              : SizedBox(width: 50, height: 50), // Placeholder in case of no imageURL
-          title: Text(product.name),
-          subtitle: Text('₹${product.price.toStringAsFixed(2)} | Weight: ${product.weight}'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(Icons.remove),
-                onPressed: () => removeProduct(product.id),
+        elevation: 4.0, // Gives a slight shadow to make the card pop a bit
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Image.network(
+              product.imageURL,
+              fit: BoxFit.cover,
+                       ),),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '₹${product.price.toStringAsFixed(2)} | Weight: ${product.weight}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.remove, color: Colors.red),
+                        onPressed: () => removeProduct(product.id),
+                      ),
+                      Text('$quantity'),
+                      IconButton(
+                        icon: Icon(Icons.add, color: Colors.green),
+                        onPressed: () => addProduct(product.id),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Text('$quantity'),
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => addProduct(product.id),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     },
   );
 }
+
 
 
   Widget _buildBottomBar(BuildContext context) {

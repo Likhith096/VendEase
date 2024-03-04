@@ -16,7 +16,6 @@ class ProductlistsectionItemWidget extends StatelessWidget {
   final String productPrice;
   final String quantity;
   final String imageUrl;
-
   const ProductlistsectionItemWidget({
     Key? key,
     required this.productName,
@@ -49,6 +48,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
 
 Razorpay? _razorpay;
+final int totalPrice=0;
 
   void _handlePaymentSuccess(PaymentSuccessResponse res)
   {
@@ -75,7 +75,7 @@ Razorpay? _razorpay;
   void makePayment() async{
     var options = {
       'key' : 'rzp_test_gPBGCagUrvEgTY',
-      'amount' : 1000, //In Paisa
+      'amount' : 8000, //In Paisa
       'name' : "Likhith",
       'description' : "Chips",
       'prefill' : {'contact': "8660486877" , 'email' : "likhith.cs21@bmsce.ac.in"},
