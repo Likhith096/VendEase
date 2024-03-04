@@ -197,7 +197,7 @@ Widget _buildCategoriesRow(BuildContext context) {
     {"name": "Snacks", "image": ImageConstant.imgCat1},
     {"name": "Chips", "image": ImageConstant.imgCat2},
     {"name": "Juices", "image": ImageConstant.imgCat3},
-    {"name": "Namkeen", "image": ImageConstant.imgCat4},
+    {"name": "Mixtures", "image": ImageConstant.imgCat4},
     {"name": "Biscuits", "image": ImageConstant.imgCat5},
     // ... other categories
   ];
