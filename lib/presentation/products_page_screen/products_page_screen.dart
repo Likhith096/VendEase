@@ -186,7 +186,7 @@ void addProduct(String productId) async {
 
   FirebaseFirestore.instance.runTransaction((transaction) async {
     DocumentSnapshot cartSnapshot = await transaction.get(cartRef);
-    DocumentSnapshot orderSnapshot = await transaction.get(orderRef); // Get the current order snapshot
+    // DocumentSnapshot orderSnapshot = await transaction.get(orderRef); // Get the current order snapshot
 
     if (cartSnapshot.exists && cartSnapshot['quantity'] > 1) {
       int newQuantity = cartSnapshot['quantity'] - 1;
