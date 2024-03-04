@@ -18,7 +18,7 @@ class ProductsPageScreen extends StatefulWidget {
   _ProductsPageScreenState createState() => _ProductsPageScreenState();
 }
 
-class _ProductsPageScreenState extends State<ProductsPageScreen> {
+class _ProductsPageScreenState extends State<ProductsPageScreen> with WidgetsBindingObserver {
   Map<String, int> productQuantities = {};
   late Future<List<Product>> _productsFuture;
   List<Product> products = [];
@@ -27,9 +27,31 @@ class _ProductsPageScreenState extends State<ProductsPageScreen> {
   void initState() {
   super.initState();
   _productsFuture = fetchProductsFromFirestore();
+  WidgetsBinding.instance.addObserver(this);
    fetchCartItemsFromFirestore(); // Fetch cart items after fetching products
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Remove the observer
+    super.dispose();
+  }
+
+   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // App is resumed - refresh the products and cart
+      _refreshProductsAndCart();
+    }
+  }
+
+  void _refreshProductsAndCart() {
+    setState(() {
+      _productsFuture = fetchProductsFromFirestore();
+    });
+    fetchCartItemsFromFirestore(); // Refresh cart items
+  }
   Future<void> fetchCartItemsFromFirestore() async {
   String userId = getCurrentUserId();
   if (userId.isEmpty) {
