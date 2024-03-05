@@ -45,8 +45,8 @@ class ImageConstant {
   // Home images
   static String imgRectangle11 = '$imagePath/img_rectangle_11.png';
   static String imgCat1 = '$imagePath/img_categories_1.png';
-  static String imgCat2 = '$imagePath/img_categories_2.png';
-  static String imgCat3 = '$imagePath/img_categories_3.png';
+  static String imgCat2 = '$imagePath/chips.png';
+  static String imgCat3 = '$imagePath/beverages.png';
   static String imgCat4 = '$imagePath/namkeen.png';
   static String imgCat5 = '$imagePath/biscuits.png';
   // Home-with-cart images
